@@ -3,12 +3,19 @@ name: Release
 on:
   release:
     types: [published]
+  # Attaches the ZIP to an existing release, e.g. one published before the ZIP existed
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, e.g. v1.0.1"
+        required: true
 
 permissions: {}
 
 jobs:
   check:
     name: Check the version
+    if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
@@ -32,3 +39,31 @@ jobs:
             exit 1
           fi
           echo "Tag $TAG matches manifest version $version and the changelog."
+
+  zip:
+    name: Attach the ZIP for HACS
+    needs: check
+    # Also runs when started by hand, where the check is skipped
+    if: always() && (needs.check.result == 'success' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+    steps:
+      - name: Check out the release
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ env.TAG }}
+      - name: Create stopwatch_plus.zip
+        # HACS unpacks the ZIP into custom_components/stopwatch_plus, so the files
+        # of the integration go to the root of the archive
+        run: |
+          cd custom_components/stopwatch_plus
+          zip -r "$GITHUB_WORKSPACE/stopwatch_plus.zip" . -x "__pycache__/*" "*/__pycache__/*"
+          cd "$GITHUB_WORKSPACE"
+          unzip -l stopwatch_plus.zip
+      - name: Upload the ZIP to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" stopwatch_plus.zip --clobber

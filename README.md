@@ -7,6 +7,7 @@
 [![Tests](https://img.shields.io/github/actions/workflow/status/bornste/ha-stopwatch-plus/tests.yml?branch=main&label=Tests&logo=github&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/actions/workflows/tests.yml)
 [![Validate](https://img.shields.io/github/actions/workflow/status/bornste/ha-stopwatch-plus/validate.yml?branch=main&label=Validate&logo=github&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/actions/workflows/validate.yml)
 [![Release](https://img.shields.io/github/v/release/bornste/ha-stopwatch-plus?sort=semver&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases)
+[![Downloads](https://img.shields.io/github/downloads/bornste/ha-stopwatch-plus/total?style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases)
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange?style=flat-square)](https://hacs.xyz/docs/faq/custom_repositories/)
 [![Home Assistant](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbornste%2Fha-stopwatch-plus%2Fmain%2Fhacs.json&query=%24.homeassistant&label=Home%20Assistant&suffix=%2B&color=41BDF5&logo=homeassistant&logoColor=white&style=flat-square)](https://www.home-assistant.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/blob/main/LICENSE)

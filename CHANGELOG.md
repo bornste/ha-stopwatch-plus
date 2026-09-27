@@ -8,6 +8,7 @@ All notable changes to Stopwatch Plus are documented here. The format follows [K
 
 ### Changed
 
+- HACS now installs the integration from a ZIP file attached to each release (`stopwatch_plus.zip`), which contains only the integration. The release workflow creates it; the number of downloads is shown in the README.
 - The repository is now called `bornste/ha-stopwatch-plus` (previously `bornste/hacs-stopwatch`), as HACS does not allow "HACS" in repository names. Links in the integration and the README point to the new name; GitHub forwards the old addresses.
 - The README displays correctly in HACS: plain images instead of `<picture>` elements (which HACS shows as text), a static license badge and absolute links.
 
