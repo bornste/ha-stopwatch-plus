@@ -4,12 +4,14 @@
 
 ***A stopwatch that counts up – by hand, or on its own while your TV, a window or any other device is on.***
 
-[![Tests](https://img.shields.io/github/actions/workflow/status/bornste/ha-stopwatch-plus/tests.yml?branch=main&label=Tests&logo=github&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/actions/workflows/tests.yml)
-[![Validate](https://img.shields.io/github/actions/workflow/status/bornste/ha-stopwatch-plus/validate.yml?branch=main&label=Validate&logo=github&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/actions/workflows/validate.yml)
-[![Release](https://img.shields.io/github/v/release/bornste/ha-stopwatch-plus?sort=semver&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases)
-[![Downloads](https://img.shields.io/github/downloads/bornste/ha-stopwatch-plus/total?style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases)
+[![Tests](https://img.shields.io/github/actions/workflow/status/bornste/ha-stopwatch-plus/tests.yml?branch=main&label=Tests&logo=github&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/actions/workflows/tests.yml) 
+[![Validate](https://img.shields.io/github/actions/workflow/status/bornste/ha-stopwatch-plus/validate.yml?branch=main&label=Validate&logo=github&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/actions/workflows/validate.yml) 
+[![Release](https://img.shields.io/github/v/release/bornste/ha-stopwatch-plus?sort=semver&label=Release&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases) 
+[![Downloads](https://img.shields.io/github/downloads/bornste/ha-stopwatch-plus/total?label=Downloads&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases)
+
 [![HACS: custom repository, default pending](https://img.shields.io/badge/HACS-Custom%20%C2%B7%20default%20pending-orange?style=flat-square)](https://github.com/hacs/default/pull/11334)
 [![Home Assistant](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbornste%2Fha-stopwatch-plus%2Fmain%2Fhacs.json&query=%24.homeassistant&label=Home%20Assistant&suffix=%2B&color=41BDF5&logo=homeassistant&logoColor=white&style=flat-square)](https://www.home-assistant.io/)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/blob/main/LICENSE)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?logo=ko-fi&logoColor=white&style=flat-square)](https://ko-fi.com/bornste)
 
