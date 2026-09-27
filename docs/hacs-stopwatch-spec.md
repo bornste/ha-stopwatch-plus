@@ -1,6 +1,6 @@
 # Stopwatch Plus – Specification (draft)
 
-Last updated: 2026-09-26. Repository: https://github.com/bornste/hacs-stopwatch (public).
+Last updated: 2026-09-26. Repository: https://github.com/bornste/ha-stopwatch-plus (public).
 
 ## Decisions
 
@@ -174,7 +174,7 @@ Automated tests with `pytest-homeassistant-custom-component` run on every push a
 
 ## Brand images
 
-Icon and logo are shipped with the integration in `custom_components/stopwatch_plus/brand/` (supported since Home Assistant 2026.3; older versions simply show no icon). Files: `icon.png` (256×256), `icon@2x.png` (512×512), `logo.png` (height 128), `logo@2x.png` (height 256), each with a `dark_` variant. Design: stopwatch with a plus on its face; indigo body, amber plus (`#4F46E5` / `#F59E0B`, dark theme `#818CF8` / `#FBBF24`), wordmark in Readex Pro SemiBold (600). Sources and generator: `docs/brand/` (`python docs/brand/generate.py <ReadexPro-SemiBold.ttf>`). The same script writes the GitHub social preview `docs/brand/social-preview.png` (1280×640, content at least 80 px from the edges), uploaded by hand under Settings → General → Social preview. The HACS validation finds the local `brand/icon.png`, so the brands check is no longer skipped.
+Icon and logo are shipped with the integration in `custom_components/stopwatch_plus/brand/` (supported since Home Assistant 2026.3; older versions simply show no icon). Files: `icon.png` (256×256), `icon@2x.png` (512×512), `logo.png` (height 128), `logo@2x.png` (height 256), each with a `dark_` variant. Design: stopwatch with a plus on its face; indigo body, amber plus (`#4F46E5` / `#F59E0B`, dark theme `#818CF8` / `#FBBF24`), wordmark in Readex Pro SemiBold (600). Sources and generator: `docs/brand/` (`python docs/brand/generate.py <ReadexPro-SemiBold.ttf>`). The same script writes the GitHub social preview `docs/brand/social-preview.png` (1280×640, content at least 80 px from the edges), uploaded by hand under Settings → General → Social preview, and the README banner `docs/brand/readme-banner.png` (1280×320, own light background with rounded corners, shown at 640 px; readable on light and dark backgrounds, as HACS does not support `<picture>`). The HACS validation finds the local `brand/icon.png`, so the brands check is no longer skipped.
 
 ## Translations
 

@@ -5,8 +5,9 @@ Usage, from the repository root:
     pip install cairosvg pillow
     python docs/brand/generate.py path/to/ReadexPro-SemiBold.ttf
 
-The icon SVGs and the social preview for GitHub (social-preview.png, 1280x640) are
-written to docs/brand; the other PNG files go to custom_components/stopwatch_plus/brand.
+The icon SVGs, the social preview for GitHub (social-preview.png, 1280x640) and the
+README banner (readme-banner.png, 1280x320) are written to docs/brand; the other PNG
+files go to custom_components/stopwatch_plus/brand.
 Readex Pro (weight 600, SemiBold) is available from Google Fonts.
 """
 
@@ -128,6 +129,31 @@ def social_preview(font_path: str) -> Image.Image:
     return image.convert("RGB")
 
 
+def readme_banner(font_path: str) -> Image.Image:
+    """Return the banner at the top of the README, 1280x320 (shown at half size).
+
+    It brings its own light background with rounded corners, so the logo stays
+    readable on the light and the dark theme of GitHub and in HACS.
+    """
+    width, height, radius = 1280, 320, 40
+    colors = palette(dark=False)
+    image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    background = Image.new("RGBA", (width, height), "#EEF2FF")
+    # Accent bar at the bottom edge in the brand colors
+    draw = ImageDraw.Draw(background)
+    draw.rectangle((0, height - 12, width * 0.8, height), fill=colors["body"])
+    draw.rectangle((width * 0.8, height - 12, width, height), fill=colors["accent"])
+    mask = Image.new("L", (width, height), 0)
+    corners = (0, 0, width - 1, height - 1)
+    ImageDraw.Draw(mask).rounded_rectangle(corners, radius=radius, fill=255)
+    image.paste(background, (0, 0), mask)
+
+    mark = logo(colors, font_path, 160)
+    top = (height - 12 - mark.height) // 2
+    image.paste(mark, ((width - mark.width) // 2, top), mark)
+    return image
+
+
 def main(font_path: str) -> None:
     """Write all SVG and PNG files."""
     PNG_DIR.mkdir(parents=True, exist_ok=True)
@@ -149,6 +175,10 @@ def main(font_path: str) -> None:
     preview = social_preview(font_path)
     preview.save(SVG_DIR / "social-preview.png", optimize=True)
     print("social-preview.png", preview.size)
+
+    banner = readme_banner(font_path)
+    banner.save(SVG_DIR / "readme-banner.png", optimize=True)
+    print("readme-banner.png", banner.size)
 
 
 if __name__ == "__main__":

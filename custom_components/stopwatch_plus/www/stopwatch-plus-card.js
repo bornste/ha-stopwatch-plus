@@ -828,7 +828,7 @@ Promise.all([whenFrontendReady(), loadStrings()]).then(() => {
       name: localize(undefined, "cardName"),
       description: localize(undefined, "cardDescription"),
       preview: true,
-      documentationURL: "https://github.com/bornste/hacs-stopwatch",
+      documentationURL: "https://github.com/bornste/ha-stopwatch-plus",
       getEntitySuggestion: entitySuggestions,
     });
   }

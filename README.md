@@ -1,28 +1,20 @@
-<p align="left">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bornste/hacs-stopwatch/main/custom_components/stopwatch_plus/brand/dark_logo@2x.png">
-    <img alt="Stopwatch Plus" src="https://raw.githubusercontent.com/bornste/hacs-stopwatch/main/custom_components/stopwatch_plus/brand/logo@2x.png" width="420">
-  </picture>
-</p>
+<img alt="Stopwatch Plus" src="https://raw.githubusercontent.com/bornste/ha-stopwatch-plus/main/docs/brand/readme-banner.png" width="640">
 
 # Stopwatch Plus for Home Assistant
 
-***A stopwatch that counts up – by hand, or on its own while your TV, a window or any other device is on.***<br><br>
+***A stopwatch that counts up – by hand, or on its own while your TV, a window or any other device is on.***
 
-[![Tests](https://img.shields.io/github/actions/workflow/status/bornste/hacs-stopwatch/tests.yml?branch=main&label=Tests&logo=github&style=flat-square)](https://github.com/bornste/hacs-stopwatch/actions/workflows/tests.yml)
-[![Validate](https://img.shields.io/github/actions/workflow/status/bornste/hacs-stopwatch/validate.yml?branch=main&label=Validate&logo=github&style=flat-square)](https://github.com/bornste/hacs-stopwatch/actions/workflows/validate.yml)
-[![Release](https://img.shields.io/github/v/release/bornste/hacs-stopwatch?sort=semver&style=flat-square)](https://github.com/bornste/hacs-stopwatch/releases)
+[![Tests](https://img.shields.io/github/actions/workflow/status/bornste/ha-stopwatch-plus/tests.yml?branch=main&label=Tests&logo=github&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/actions/workflows/tests.yml)
+[![Validate](https://img.shields.io/github/actions/workflow/status/bornste/ha-stopwatch-plus/validate.yml?branch=main&label=Validate&logo=github&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/actions/workflows/validate.yml)
+[![Release](https://img.shields.io/github/v/release/bornste/ha-stopwatch-plus?sort=semver&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases)
 [![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange?style=flat-square)](https://hacs.xyz/docs/faq/custom_repositories/)
-[![Home Assistant](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbornste%2Fhacs-stopwatch%2Fmain%2Fhacs.json&query=%24.homeassistant&label=Home%20Assistant&suffix=%2B&color=41BDF5&logo=homeassistant&logoColor=white&style=flat-square)](https://www.home-assistant.io/)
-[![License](https://img.shields.io/github/license/bornste/hacs-stopwatch?style=flat-square)](LICENSE)
+[![Home Assistant](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbornste%2Fha-stopwatch-plus%2Fmain%2Fhacs.json&query=%24.homeassistant&label=Home%20Assistant&suffix=%2B&color=41BDF5&logo=homeassistant&logoColor=white&style=flat-square)](https://www.home-assistant.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/blob/main/LICENSE)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?logo=ko-fi&logoColor=white&style=flat-square)](https://ko-fi.com/bornste)
 
 Home Assistant's built-in `timer` counts down. Stopwatch Plus counts **up**: start, pause and resume it from the dashboard, or let it follow an entity – for example, it runs while the TV is playing and pauses when it is off. Interval events announce "one hour of screen time" or "the window has been open for 10 minutes", and a dashboard card shows the time live, second by second.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bornste/hacs-stopwatch/main/docs/images/card-hero-dark.png">
-  <img alt="Stopwatch Plus card of a running stopwatch" src="https://raw.githubusercontent.com/bornste/hacs-stopwatch/main/docs/images/card-hero.png" width="420">
-</picture>
+<img alt="Stopwatch Plus card of a running stopwatch" src="https://raw.githubusercontent.com/bornste/ha-stopwatch-plus/main/docs/images/card-hero.png" width="420">
 
 ## Contents
 
@@ -63,12 +55,12 @@ Home Assistant's built-in `timer` counts down. Stopwatch Plus counts **up**: sta
 
 ### With HACS (recommended)
 
-[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=bornste&repository=hacs-stopwatch&category=integration)
+[![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=bornste&repository=ha-stopwatch-plus&category=integration)
 
 Stopwatch Plus is not in the default HACS store yet. Until then, add it as a custom repository:
 
 1. In Home Assistant, open **HACS**, then the menu (three dots, top right) → **Custom repositories**.
-2. Enter `https://github.com/bornste/hacs-stopwatch`, choose the type **Integration** and select **Add**.
+2. Enter `https://github.com/bornste/ha-stopwatch-plus`, choose the type **Integration** and select **Add**.
 3. Search for **Stopwatch Plus** in HACS, open it and select **Download**.
 4. Restart Home Assistant.
 
@@ -104,10 +96,7 @@ In the collapsible section **Source entity** (optional, see [Following a source 
 
 ## Dashboard card
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bornste/hacs-stopwatch/main/docs/images/card-preview-dark.png">
-  <img alt="Stopwatch Plus card in the standard and compact layout, and the tile card feature" src="https://raw.githubusercontent.com/bornste/hacs-stopwatch/main/docs/images/card-preview.png">
-</picture>
+<img alt="Stopwatch Plus card in the standard and compact layout, and the tile card feature" src="https://raw.githubusercontent.com/bornste/ha-stopwatch-plus/main/docs/images/card-preview.png">
 
 Stopwatch Plus brings its own dashboard card. It is loaded automatically – no resource has to be added. It counts live in the browser every second, whatever the sensor update interval, and has buttons for Start/Pause, Stop and Reset.
 
@@ -297,8 +286,8 @@ Every update is written to the database. With one update per second, a running s
 **Can I add a language or improve a translation?**
 Gladly. Dutch, French, Spanish and Italian are translated with AI and have not been checked by native speakers yet, so corrections are just as welcome as new languages. The texts are in two places:
 
-1. **Integration** (setup, entities, actions, triggers): copy [`translations/en.json`](custom_components/stopwatch_plus/translations/en.json) and save it as `<language code>.json`, e.g. `pt.json`.
-2. **Dashboard card:** in [`www/stopwatch-plus-card-translations.js`](custom_components/stopwatch_plus/www/stopwatch-plus-card-translations.js), copy the `en` block and rename it to the language code.
+1. **Integration** (setup, entities, actions, triggers): copy [`translations/en.json`](https://github.com/bornste/ha-stopwatch-plus/blob/main/custom_components/stopwatch_plus/translations/en.json) and save it as `<language code>.json`, e.g. `pt.json`.
+2. **Dashboard card:** in [`www/stopwatch-plus-card-translations.js`](https://github.com/bornste/ha-stopwatch-plus/blob/main/custom_components/stopwatch_plus/www/stopwatch-plus-card-translations.js), copy the `en` block and rename it to the language code.
 
 Translate the texts, keep the keys as they are, and open a pull request.
 
@@ -307,7 +296,7 @@ Every integration has a unique internal name, the *domain*. It appears in action
 
 ## Development
 
-See [docs/development.md](docs/development.md) for the local development instance and the tests.
+See [docs/development.md](https://github.com/bornste/ha-stopwatch-plus/blob/main/docs/development.md) for the local development instance and the tests.
 
 ## Support
 
@@ -317,7 +306,7 @@ If Stopwatch Plus is useful to you, you can buy me a coffee on Ko-fi. Thank you!
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/bornste/ha-stopwatch-plus/blob/main/LICENSE)
 
 ---
 

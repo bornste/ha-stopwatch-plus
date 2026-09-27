@@ -5,10 +5,10 @@
   "codeowners": ["@bornste"],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/bornste/hacs-stopwatch",
+  "documentation": "https://github.com/bornste/ha-stopwatch-plus",
   "integration_type": "service",
   "iot_class": "calculated",
-  "issue_tracker": "https://github.com/bornste/hacs-stopwatch/issues",
+  "issue_tracker": "https://github.com/bornste/ha-stopwatch-plus/issues",
   "requirements": [],
-  "version": "1.0.0"
+  "version": "1.0.1"
 }

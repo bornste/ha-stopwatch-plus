@@ -4,6 +4,13 @@ All notable changes to Stopwatch Plus are documented here. The format follows [K
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-27
+
+### Changed
+
+- The repository is now called `bornste/ha-stopwatch-plus` (previously `bornste/hacs-stopwatch`), as HACS does not allow "HACS" in repository names. Links in the integration and the README point to the new name; GitHub forwards the old addresses.
+- The README displays correctly in HACS: plain images instead of `<picture>` elements (which HACS shows as text), a static license badge and absolute links.
+
 ## [1.0.0] - 2026-09-26
 
 First stable release.
@@ -58,8 +65,9 @@ First pre-release.
 - English and German translations.
 - Icon and logo, light and dark (shown from Home Assistant 2026.3 on).
 
-[Unreleased]: https://github.com/bornste/hacs-stopwatch/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/bornste/hacs-stopwatch/compare/v0.3.0...v1.0.0
-[0.3.0]: https://github.com/bornste/hacs-stopwatch/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/bornste/hacs-stopwatch/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/bornste/hacs-stopwatch/releases/tag/v0.1.0
+[Unreleased]: https://github.com/bornste/ha-stopwatch-plus/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/bornste/ha-stopwatch-plus/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/bornste/ha-stopwatch-plus/compare/v0.3.0...v1.0.0
+[0.3.0]: https://github.com/bornste/ha-stopwatch-plus/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/bornste/ha-stopwatch-plus/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/bornste/ha-stopwatch-plus/releases/tag/v0.1.0
