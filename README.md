@@ -8,12 +8,14 @@
 [![Validate](https://img.shields.io/github/actions/workflow/status/bornste/ha-stopwatch-plus/validate.yml?branch=main&label=Validate&logo=github&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/actions/workflows/validate.yml)
 [![Release](https://img.shields.io/github/v/release/bornste/ha-stopwatch-plus?sort=semver&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases)
 [![Downloads](https://img.shields.io/github/downloads/bornste/ha-stopwatch-plus/total?style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases)
-[![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange?style=flat-square)](https://hacs.xyz/docs/faq/custom_repositories/)
+[![HACS: custom repository, default pending](https://img.shields.io/badge/HACS-Custom%20%C2%B7%20default%20pending-orange?style=flat-square)](https://github.com/hacs/default/pull/11334)
 [![Home Assistant](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbornste%2Fha-stopwatch-plus%2Fmain%2Fhacs.json&query=%24.homeassistant&label=Home%20Assistant&suffix=%2B&color=41BDF5&logo=homeassistant&logoColor=white&style=flat-square)](https://www.home-assistant.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/blob/main/LICENSE)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?logo=ko-fi&logoColor=white&style=flat-square)](https://ko-fi.com/bornste)
 
 Home Assistant's built-in `timer` counts down. Stopwatch Plus counts **up**: start, pause and resume it from the dashboard, or let it follow an entity – for example, it runs while the TV is playing and pauses when it is off. Interval events announce "one hour of screen time" or "the window has been open for 10 minutes", and a dashboard card shows the time live, second by second.
+
+> **Not in the HACS store yet:** Stopwatch Plus is [waiting for inclusion](https://github.com/hacs/default/pull/11334) in the default HACS store. Until then, search in HACS will not find it – add it as a **custom repository** first. It takes one click, see [Installation](#installation).
 
 <img alt="Stopwatch Plus card of a running stopwatch" src="https://raw.githubusercontent.com/bornste/ha-stopwatch-plus/main/docs/images/card-hero.png" width="420">
 
@@ -54,11 +56,13 @@ Home Assistant's built-in `timer` counts down. Stopwatch Plus counts **up**: sta
 
 ## Installation
 
-### With HACS (recommended)
+### With HACS as a custom repository (recommended)
+
+> **Important:** Stopwatch Plus is [not in the default HACS store yet](https://github.com/hacs/default/pull/11334), so HACS only finds it after you add this repository as a custom repository. The button below does that for you.
 
 [![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=bornste&repository=ha-stopwatch-plus&category=integration)
 
-Stopwatch Plus is not in the default HACS store yet. Until then, add it as a custom repository:
+Or step by step:
 
 1. In Home Assistant, open **HACS**, then the menu (three dots, top right) → **Custom repositories**.
 2. Enter `https://github.com/bornste/ha-stopwatch-plus`, choose the type **Integration** and select **Add**.
