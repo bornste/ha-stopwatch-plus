@@ -19,7 +19,7 @@ Home Assistant's built-in `timer` counts down. Stopwatch Plus counts **up**: sta
 
 > **Not in the HACS store yet:** Stopwatch Plus is [waiting for inclusion](https://github.com/hacs/default/pull/11334) in the default HACS store. Until then, search in HACS will not find it – add it as a **custom repository** first. It takes one click, see [Installation](#installation).
 
-<img alt="Stopwatch Plus card of a running stopwatch" src="https://raw.githubusercontent.com/bornste/ha-stopwatch-plus/main/docs/images/card-hero.png" width="420">
+<img alt="Stopwatch Plus card of a running stopwatch" src="https://raw.githubusercontent.com/bornste/ha-stopwatch-plus/main/docs/images/card-demo.gif" width="420">
 
 ## Contents
 
