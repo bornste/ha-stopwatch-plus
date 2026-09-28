@@ -11,7 +11,7 @@ The instance lives in `~/ha-dev` inside WSL (virtual environment and configurati
 Open a WSL terminal and run:
 
 ```bash
-cd /mnt/c/Dev/GitHub/bornste/hacs-stopwatch
+cd /mnt/c/Dev/GitHub/bornste/ha-stopwatch-plus
 bash scripts/setup
 ```
 
@@ -20,7 +20,7 @@ The script installs a few system packages (asks for the WSL password), installs 
 ### Start
 
 ```bash
-cd /mnt/c/Dev/GitHub/bornste/hacs-stopwatch
+cd /mnt/c/Dev/GitHub/bornste/ha-stopwatch-plus
 bash scripts/develop
 ```
 
@@ -37,7 +37,7 @@ The card lives in `custom_components/stopwatch_plus/www/stopwatch-plus-card.js` 
 ### Automated tests
 
 ```bash
-cd /mnt/c/Dev/GitHub/bornste/hacs-stopwatch
+cd /mnt/c/Dev/GitHub/bornste/ha-stopwatch-plus
 bash scripts/test
 ```
 

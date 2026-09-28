@@ -33,7 +33,7 @@ Home Assistant's built-in `timer` counts down. Stopwatch Plus counts **up**: sta
 - [Reference](#reference)
 - [Tips](#tips)
 - [FAQ](#faq)
-- [Development](#development) · [Support](#support) · [License](#license)
+- [Development](#development) · [Support](#support) · [Built with AI](#built-with-ai) · [License](#license)
 
 ## Features
 
@@ -311,10 +311,14 @@ If Stopwatch Plus is useful to you, you can buy me a coffee on Ko-fi. Thank you!
 
 [![Support me on Ko-fi](https://img.shields.io/badge/Buy%20me%20a%20coffee-Ko--fi-FF5E5B?logo=ko-fi&logoColor=white&style=flat-square)](https://ko-fi.com/bornste)
 
+## Built with AI
+
+Stopwatch Plus is developed by [@bornste](https://github.com/bornste) with the help of [Claude](https://www.anthropic.com/claude), an AI assistant by Anthropic. Code, tests, documentation and the Dutch, French, Spanish and Italian translations were written together with Claude. The idea, the requirements and the decisions are mine, and every change is reviewed and tested on a real Home Assistant setup before it is released.
+
 ## License
 
 [MIT](https://github.com/bornste/ha-stopwatch-plus/blob/main/LICENSE)
 
 ---
 
-Made with ❤️ by [@bornste](https://github.com/bornste) and Claude
+Made with ❤️ by [@bornste](https://github.com/bornste)
