@@ -4,6 +4,8 @@ All notable changes to Stopwatch Plus are documented here. The format follows [K
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-26
+
 ### Added
 
 - A stopwatch can follow several source entities. **Combine** decides whether it runs while at least one of them is running (OR, the default) or only while all of them are (AND). The grace period and the automatic stop apply to the combined state.
@@ -80,7 +82,8 @@ First pre-release.
 - English and German translations.
 - Icon and logo, light and dark (shown from Home Assistant 2026.3 on).
 
-[Unreleased]: https://github.com/bornste/ha-stopwatch-plus/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/bornste/ha-stopwatch-plus/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/bornste/ha-stopwatch-plus/compare/v1.0.1...v1.1.0
 [1.0.1]: https://github.com/bornste/ha-stopwatch-plus/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/bornste/ha-stopwatch-plus/compare/v0.3.0...v1.0.0
 [0.3.0]: https://github.com/bornste/ha-stopwatch-plus/compare/v0.2.0...v0.3.0
