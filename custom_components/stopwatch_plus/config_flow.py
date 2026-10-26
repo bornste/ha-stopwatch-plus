@@ -20,6 +20,7 @@ from homeassistant.helpers.selector import (
     BooleanSelector,
     DurationSelector,
     EntitySelector,
+    EntitySelectorConfig,
     SelectSelector,
     SelectSelectorConfig,
     SelectSelectorMode,
@@ -32,13 +33,15 @@ from .const import (
     CONF_GRACE_PERIOD,
     CONF_INTERVAL,
     CONF_RUNNING_STATES,
-    CONF_SOURCE_ENTITY,
+    CONF_SOURCE_COMBINE,
+    CONF_SOURCE_ENTITIES,
     CONF_UPDATE_INTERVAL,
     DEFAULT_AUTO_STOP,
     DEFAULT_AUTO_STOP_DELAY,
     DEFAULT_GRACE_PERIOD,
     DEFAULT_INTERVAL,
     DEFAULT_RUNNING_STATES,
+    DEFAULT_SOURCE_COMBINE,
     DEFAULT_UPDATE_INTERVAL,
     DOMAIN,
     MAX_AUTO_STOP_DELAY,
@@ -46,6 +49,7 @@ from .const import (
     MAX_INTERVAL,
     MAX_UPDATE_INTERVAL,
     MIN_UPDATE_INTERVAL,
+    SOURCE_COMBINE_MODES,
 )
 
 # Collapsible section of the form that holds the source entity settings
@@ -61,6 +65,7 @@ DURATION_OPTIONS = (
 DEFAULTS: dict[str, Any] = {
     CONF_INTERVAL: DEFAULT_INTERVAL,
     CONF_UPDATE_INTERVAL: DEFAULT_UPDATE_INTERVAL,
+    CONF_SOURCE_COMBINE: DEFAULT_SOURCE_COMBINE,
     CONF_RUNNING_STATES: DEFAULT_RUNNING_STATES,
     CONF_GRACE_PERIOD: DEFAULT_GRACE_PERIOD,
     CONF_AUTO_STOP: DEFAULT_AUTO_STOP,
@@ -84,7 +89,16 @@ def _options_schema(collapsed: bool) -> dict[vol.Marker, Any]:
     """Return the fields that can be changed later in the options."""
     source_schema = vol.Schema(
         {
-            vol.Optional(CONF_SOURCE_ENTITY): EntitySelector(),
+            vol.Optional(CONF_SOURCE_ENTITIES): EntitySelector(
+                EntitySelectorConfig(multiple=True)
+            ),
+            vol.Optional(CONF_SOURCE_COMBINE): SelectSelector(
+                SelectSelectorConfig(
+                    options=SOURCE_COMBINE_MODES,
+                    translation_key=CONF_SOURCE_COMBINE,
+                    mode=SelectSelectorMode.LIST,
+                )
+            ),
             vol.Optional(CONF_RUNNING_STATES): SelectSelector(
                 SelectSelectorConfig(
                     options=DEFAULT_RUNNING_STATES,
@@ -112,7 +126,8 @@ def _form_values(options: dict[str, Any]) -> dict[str, Any]:
     for key in DURATION_OPTIONS:
         values[key] = _seconds_to_duration(values[key])
     source_keys = (
-        CONF_SOURCE_ENTITY,
+        CONF_SOURCE_ENTITIES,
+        CONF_SOURCE_COMBINE,
         CONF_RUNNING_STATES,
         CONF_GRACE_PERIOD,
         CONF_AUTO_STOP,
@@ -127,8 +142,9 @@ def _validate_options(
 ) -> tuple[dict[str, Any], dict[str, str]]:
     """Flatten the form input, convert durations to seconds and check limits.
 
-    Fields that are missing keep their current value. The source entity is only
-    removed when the source section is sent without it (the field was cleared).
+    Fields that are missing keep their current value. The source entities are
+    only removed when the source section is sent without them or with an empty
+    list (the field was cleared).
     """
     current_values = _form_values(current)
     values = {
@@ -139,9 +155,9 @@ def _validate_options(
     }
     if (
         SECTION_SOURCE in user_input
-        and CONF_SOURCE_ENTITY not in user_input[SECTION_SOURCE]
+        and CONF_SOURCE_ENTITIES not in user_input[SECTION_SOURCE]
     ):
-        values.pop(CONF_SOURCE_ENTITY, None)
+        values.pop(CONF_SOURCE_ENTITIES, None)
     options: dict[str, Any] = {
         key: _duration_to_seconds(values[key]) for key in DURATION_OPTIONS
     }
@@ -149,8 +165,13 @@ def _validate_options(
         state.strip() for state in values.get(CONF_RUNNING_STATES, []) if state.strip()
     ]
     options[CONF_AUTO_STOP] = bool(values.get(CONF_AUTO_STOP, DEFAULT_AUTO_STOP))
-    if values.get(CONF_SOURCE_ENTITY):
-        options[CONF_SOURCE_ENTITY] = values[CONF_SOURCE_ENTITY]
+    options[CONF_SOURCE_COMBINE] = values.get(
+        CONF_SOURCE_COMBINE, DEFAULT_SOURCE_COMBINE
+    )
+    # Without duplicates, in the order they were selected
+    source_entities = list(dict.fromkeys(values.get(CONF_SOURCE_ENTITIES) or []))
+    if source_entities:
+        options[CONF_SOURCE_ENTITIES] = source_entities
 
     errors: dict[str, str] = {}
     if options[CONF_INTERVAL] > MAX_INTERVAL:
@@ -158,7 +179,7 @@ def _validate_options(
     if not MIN_UPDATE_INTERVAL <= options[CONF_UPDATE_INTERVAL] <= MAX_UPDATE_INTERVAL:
         errors[CONF_UPDATE_INTERVAL] = "update_interval_out_of_range"
     # Fields inside a section are reported as general errors of the form
-    if CONF_SOURCE_ENTITY in options and not options[CONF_RUNNING_STATES]:
+    if CONF_SOURCE_ENTITIES in options and not options[CONF_RUNNING_STATES]:
         errors["base"] = "running_states_required"
     elif options[CONF_GRACE_PERIOD] > MAX_GRACE_PERIOD:
         errors["base"] = "grace_period_too_long"
@@ -171,6 +192,8 @@ class StopwatchPlusConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle the creation of a new stopwatch."""
 
     VERSION = 1
+    # 2: a list of source entities instead of a single one (see async_migrate_entry)
+    MINOR_VERSION = 2
 
     @staticmethod
     @callback
@@ -217,8 +240,8 @@ class StopwatchPlusOptionsFlow(OptionsFlowWithReload):
             if not errors:
                 return self.async_create_entry(data=options)
 
-        # The source section is open when a source entity is configured
-        collapsed = CONF_SOURCE_ENTITY not in self.config_entry.options
+        # The source section is open when source entities are configured
+        collapsed = CONF_SOURCE_ENTITIES not in self.config_entry.options
         schema = vol.Schema(_options_schema(collapsed=collapsed))
         return self.async_show_form(
             step_id="init",

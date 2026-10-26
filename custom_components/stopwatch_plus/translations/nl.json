@@ -16,18 +16,20 @@
         },
         "sections": {
           "source": {
-            "name": "Bronentiteit",
-            "description": "Optioneel: laat de stopwatch een entiteit volgen, bijv. een tv of een raamsensor. Hij loopt zolang de entiteit in een van de looptoestanden is en pauzeert anders.",
+            "name": "Bronentiteiten",
+            "description": "Optioneel: laat de stopwatch een of meer entiteiten volgen, bijv. een tv of een raamsensor. Hij loopt zolang de entiteiten in een van de looptoestanden zijn en pauzeert anders. Bij meerdere entiteiten bepaalt \"Combineren\" wanneer ze samen als lopend gelden; de wachttijd en het automatisch stoppen gaan uit van deze gecombineerde toestand.",
             "data": {
-              "source_entity": "Bronentiteit",
+              "source_entities": "Bronentiteiten",
+              "source_combine": "Combineren",
               "running_states": "Looptoestanden",
               "grace_period": "Wachttijd bij onbeschikbaarheid",
               "auto_stop": "Automatisch stoppen na inactiviteit",
               "auto_stop_delay": "Inactiviteit tot het stoppen"
             },
             "data_description": {
-              "source_entity": "Laat leeg om de stopwatch alleen met knoppen, acties en automatiseringen te bedienen.",
-              "running_states": "Toestanden van de bronentiteit waarin de stopwatch loopt, bijv. \"playing\" of \"on\". Je kunt ook eigen waarden typen.",
+              "source_entities": "Laat leeg om de stopwatch alleen met knoppen, acties en automatiseringen te bedienen.",
+              "source_combine": "Hoe de toestanden van meerdere bronentiteiten worden gecombineerd. Alleen van belang bij twee of meer.",
+              "running_states": "Toestanden waarin een bronentiteit als lopend geldt, bijv. \"playing\" of \"on\". Ze gelden voor alle bronentiteiten. Je kunt ook eigen waarden typen.",
               "grace_period": "Als de bron langer dan deze tijd onbeschikbaar of onbekend is, pauzeert de stopwatch met terugwerkende kracht vanaf het begin van de uitval. 0 schakelt de wachttijd uit: onbeschikbaar pauzeert dan meteen, zoals elke andere toestand die niet als lopend geldt. Maximaal 1 uur.",
               "auto_stop": "Als de bron gedurende de onderstaande tijd inactief blijft, eindigt de sessie: de stopwatch wordt gestopt en teruggezet op nul. De tijd van de sessie blijft bewaard in de sensor \"Laatste sessie\". De volgende start van de bron begint een nieuwe sessie.",
               "auto_stop_delay": "Hoe lang de bron inactief moet zijn voordat de stopwatch stopt, maximaal 7 dagen. 0: de stopwatch stopt zodra de bron inactief wordt."
@@ -39,7 +41,7 @@
     "error": {
       "interval_too_long": "Het interval mag maximaal 24 uur zijn.",
       "update_interval_out_of_range": "Het update-interval moet tussen 1 seconde en 1 uur liggen.",
-      "running_states_required": "Selecteer ten minste één looptoestand voor de bronentiteit.",
+      "running_states_required": "Selecteer ten minste één looptoestand voor de bronentiteiten.",
       "grace_period_too_long": "De wachttijd mag maximaal 1 uur zijn.",
       "auto_stop_delay_too_long": "De inactiviteit tot het stoppen mag maximaal 7 dagen zijn."
     }
@@ -58,18 +60,20 @@
         },
         "sections": {
           "source": {
-            "name": "Bronentiteit",
-            "description": "Optioneel: laat de stopwatch een entiteit volgen, bijv. een tv of een raamsensor. Hij loopt zolang de entiteit in een van de looptoestanden is en pauzeert anders.",
+            "name": "Bronentiteiten",
+            "description": "Optioneel: laat de stopwatch een of meer entiteiten volgen, bijv. een tv of een raamsensor. Hij loopt zolang de entiteiten in een van de looptoestanden zijn en pauzeert anders. Bij meerdere entiteiten bepaalt \"Combineren\" wanneer ze samen als lopend gelden; de wachttijd en het automatisch stoppen gaan uit van deze gecombineerde toestand.",
             "data": {
-              "source_entity": "Bronentiteit",
+              "source_entities": "Bronentiteiten",
+              "source_combine": "Combineren",
               "running_states": "Looptoestanden",
               "grace_period": "Wachttijd bij onbeschikbaarheid",
               "auto_stop": "Automatisch stoppen na inactiviteit",
               "auto_stop_delay": "Inactiviteit tot het stoppen"
             },
             "data_description": {
-              "source_entity": "Laat leeg om de stopwatch alleen met knoppen, acties en automatiseringen te bedienen.",
-              "running_states": "Toestanden van de bronentiteit waarin de stopwatch loopt, bijv. \"playing\" of \"on\". Je kunt ook eigen waarden typen.",
+              "source_entities": "Laat leeg om de stopwatch alleen met knoppen, acties en automatiseringen te bedienen.",
+              "source_combine": "Hoe de toestanden van meerdere bronentiteiten worden gecombineerd. Alleen van belang bij twee of meer.",
+              "running_states": "Toestanden waarin een bronentiteit als lopend geldt, bijv. \"playing\" of \"on\". Ze gelden voor alle bronentiteiten. Je kunt ook eigen waarden typen.",
               "grace_period": "Als de bron langer dan deze tijd onbeschikbaar of onbekend is, pauzeert de stopwatch met terugwerkende kracht vanaf het begin van de uitval. 0 schakelt de wachttijd uit: onbeschikbaar pauzeert dan meteen, zoals elke andere toestand die niet als lopend geldt. Maximaal 1 uur.",
               "auto_stop": "Als de bron gedurende de onderstaande tijd inactief blijft, eindigt de sessie: de stopwatch wordt gestopt en teruggezet op nul. De tijd van de sessie blijft bewaard in de sensor \"Laatste sessie\". De volgende start van de bron begint een nieuwe sessie.",
               "auto_stop_delay": "Hoe lang de bron inactief moet zijn voordat de stopwatch stopt, maximaal 7 dagen. 0: de stopwatch stopt zodra de bron inactief wordt."
@@ -81,9 +85,17 @@
     "error": {
       "interval_too_long": "Het interval mag maximaal 24 uur zijn.",
       "update_interval_out_of_range": "Het update-interval moet tussen 1 seconde en 1 uur liggen.",
-      "running_states_required": "Selecteer ten minste één looptoestand voor de bronentiteit.",
+      "running_states_required": "Selecteer ten minste één looptoestand voor de bronentiteiten.",
       "grace_period_too_long": "De wachttijd mag maximaal 1 uur zijn.",
       "auto_stop_delay_too_long": "De inactiviteit tot het stoppen mag maximaal 7 dagen zijn."
+    }
+  },
+  "selector": {
+    "source_combine": {
+      "options": {
+        "or": "Ten minste één loopt (OF)",
+        "and": "Alle lopen (EN)"
+      }
     }
   },
   "entity": {
@@ -110,6 +122,9 @@
         "state_attributes": {
           "elapsed_formatted": {
             "name": "Verstreken tijd (opgemaakt)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Verstreken tijd (kort)"
           },
           "status": {
             "name": "Status",
@@ -147,6 +162,9 @@
           "elapsed_formatted": {
             "name": "Laatste sessie (opgemaakt)"
           },
+          "elapsed_formatted_short": {
+            "name": "Laatste sessie (kort)"
+          },
           "ended_at": {
             "name": "Beëindigd om"
           }
@@ -172,6 +190,9 @@
           },
           "elapsed_formatted": {
             "name": "Verstreken tijd (opgemaakt)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Verstreken tijd (kort)"
           },
           "interval_count": {
             "name": "Aantal intervallen"

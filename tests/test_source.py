@@ -18,7 +18,7 @@ from custom_components.stopwatch_plus.const import (
     CONF_GRACE_PERIOD,
     CONF_INTERVAL,
     CONF_RUNNING_STATES,
-    CONF_SOURCE_ENTITY,
+    CONF_SOURCE_ENTITIES,
     CONF_UPDATE_INTERVAL,
 )
 from homeassistant.const import STATE_UNAVAILABLE
@@ -35,7 +35,7 @@ def options() -> dict[str, Any]:
     return {
         CONF_INTERVAL: 0,
         CONF_UPDATE_INTERVAL: 60,
-        CONF_SOURCE_ENTITY: XBOX,
+        CONF_SOURCE_ENTITIES: [XBOX],
         CONF_RUNNING_STATES: ["playing"],
         CONF_GRACE_PERIOD: 120,
         CONF_AUTO_STOP: True,
@@ -258,7 +258,7 @@ async def test_auto_stop_after_a_long_dropout(
         {
             CONF_INTERVAL: 0,
             CONF_UPDATE_INTERVAL: 60,
-            CONF_SOURCE_ENTITY: XBOX,
+            CONF_SOURCE_ENTITIES: [XBOX],
             CONF_RUNNING_STATES: ["playing"],
             CONF_GRACE_PERIOD: 120,
             CONF_AUTO_STOP: False,
@@ -359,7 +359,7 @@ async def test_grace_period_continues_across_a_restart(
         {
             CONF_INTERVAL: 0,
             CONF_UPDATE_INTERVAL: 60,
-            CONF_SOURCE_ENTITY: XBOX,
+            CONF_SOURCE_ENTITIES: [XBOX],
             CONF_RUNNING_STATES: ["playing"],
             CONF_GRACE_PERIOD: 0,
             CONF_AUTO_STOP: False,
@@ -391,7 +391,7 @@ async def test_no_grace_period_pauses_immediately(
         {
             CONF_INTERVAL: 0,
             CONF_UPDATE_INTERVAL: 60,
-            CONF_SOURCE_ENTITY: XBOX,
+            CONF_SOURCE_ENTITIES: [XBOX],
             CONF_RUNNING_STATES: ["playing"],
             CONF_GRACE_PERIOD: 120,
             CONF_AUTO_STOP: True,

@@ -4,6 +4,20 @@ All notable changes to Stopwatch Plus are documented here. The format follows [K
 
 ## [Unreleased]
 
+### Added
+
+- A stopwatch can follow several source entities. **Combine** decides whether it runs while at least one of them is running (OR, the default) or only while all of them are (AND). The grace period and the automatic stop apply to the combined state.
+- Attribute and event data `elapsed_formatted_short`: the time without seconds, `HH:MM` and from 24 hours on `d.HH:MM` (e.g. `02:55`, `1.02:55`). Available on the elapsed time sensor, the last session sensor, the event entity and in the event data.
+
+### Changed
+
+- The section **Source entity** of the setup and the options is now called **Source entities**, with a field for several entities.
+- Existing stopwatches are migrated automatically: their source entity becomes the only entry of the list, combined with OR, so they behave as before. After a downgrade to 1.0.x, such a stopwatch no longer follows its source until it is set again.
+
+### Documentation
+
+- The README describes the installation from the default HACS store, which now includes Stopwatch Plus.
+
 ## [1.0.1] - 2026-09-27
 
 ### Changed

@@ -16,18 +16,20 @@
         },
         "sections": {
           "source": {
-            "name": "Quell-Entität",
-            "description": "Optional: Die Stoppuhr folgt einer Entität, z. B. einem Fernseher oder einem Fenstersensor. Sie läuft, solange die Entität in einem der Lauf-Zustände ist, und pausiert sonst.",
+            "name": "Quell-Entitäten",
+            "description": "Optional: Die Stoppuhr folgt einer oder mehreren Entitäten, z. B. einem Fernseher oder einem Fenstersensor. Sie läuft, solange die Entitäten in einem der Lauf-Zustände sind, und pausiert sonst. Bei mehreren Entitäten bestimmt „Verknüpfung“, wann sie gemeinsam als laufend gelten; Karenzzeit und automatischer Stopp richten sich nach diesem gemeinsamen Zustand.",
             "data": {
-              "source_entity": "Quell-Entität",
+              "source_entities": "Quell-Entitäten",
+              "source_combine": "Verknüpfung",
               "running_states": "Lauf-Zustände",
               "grace_period": "Karenzzeit bei Nichtverfügbarkeit",
               "auto_stop": "Nach Inaktivität automatisch stoppen",
               "auto_stop_delay": "Inaktivität bis zum Stopp"
             },
             "data_description": {
-              "source_entity": "Leer lassen, um die Stoppuhr nur mit Buttons, Aktionen und Automationen zu steuern.",
-              "running_states": "Zustände der Quell-Entität, in denen die Stoppuhr läuft, z. B. „playing“ oder „on“. Eigene Werte können eingetippt werden.",
+              "source_entities": "Leer lassen, um die Stoppuhr nur mit Buttons, Aktionen und Automationen zu steuern.",
+              "source_combine": "Wie die Zustände mehrerer Quell-Entitäten verknüpft werden. Wirkt erst ab zwei Entitäten.",
+              "running_states": "Zustände, in denen eine Quell-Entität als laufend gilt, z. B. „playing“ oder „on“. Sie gelten für alle Quell-Entitäten. Eigene Werte können eingetippt werden.",
               "grace_period": "Ist die Quelle länger als diese Zeit nicht verfügbar oder unbekannt, pausiert die Stoppuhr rückwirkend ab Beginn des Ausfalls. 0 schaltet die Karenzzeit aus: Nicht verfügbar pausiert dann sofort wie jeder andere Zustand, der nicht als laufend gilt. Höchstens 1 Stunde.",
               "auto_stop": "Bleibt die Quelle so lange inaktiv wie unten eingestellt, endet die Session: Die Stoppuhr wird angehalten und auf null gesetzt. Die Zeit der Session bleibt im Sensor „Letzte Session“ erhalten. Der nächste Start der Quelle beginnt eine neue Session.",
               "auto_stop_delay": "Wie lange die Quelle inaktiv sein muss, bis die Stoppuhr gestoppt wird, höchstens 7 Tage. 0: Die Stoppuhr stoppt, sobald die Quelle inaktiv wird."
@@ -39,7 +41,7 @@
     "error": {
       "interval_too_long": "Das Intervall darf höchstens 24 Stunden betragen.",
       "update_interval_out_of_range": "Das Aktualisierungsintervall muss zwischen 1 Sekunde und 1 Stunde liegen.",
-      "running_states_required": "Wähle mindestens einen Lauf-Zustand für die Quell-Entität.",
+      "running_states_required": "Wähle mindestens einen Lauf-Zustand für die Quell-Entitäten.",
       "grace_period_too_long": "Die Karenzzeit darf höchstens 1 Stunde betragen.",
       "auto_stop_delay_too_long": "Die Inaktivität bis zum Stopp darf höchstens 7 Tage betragen."
     }
@@ -58,18 +60,20 @@
         },
         "sections": {
           "source": {
-            "name": "Quell-Entität",
-            "description": "Optional: Die Stoppuhr folgt einer Entität, z. B. einem Fernseher oder einem Fenstersensor. Sie läuft, solange die Entität in einem der Lauf-Zustände ist, und pausiert sonst.",
+            "name": "Quell-Entitäten",
+            "description": "Optional: Die Stoppuhr folgt einer oder mehreren Entitäten, z. B. einem Fernseher oder einem Fenstersensor. Sie läuft, solange die Entitäten in einem der Lauf-Zustände sind, und pausiert sonst. Bei mehreren Entitäten bestimmt „Verknüpfung“, wann sie gemeinsam als laufend gelten; Karenzzeit und automatischer Stopp richten sich nach diesem gemeinsamen Zustand.",
             "data": {
-              "source_entity": "Quell-Entität",
+              "source_entities": "Quell-Entitäten",
+              "source_combine": "Verknüpfung",
               "running_states": "Lauf-Zustände",
               "grace_period": "Karenzzeit bei Nichtverfügbarkeit",
               "auto_stop": "Nach Inaktivität automatisch stoppen",
               "auto_stop_delay": "Inaktivität bis zum Stopp"
             },
             "data_description": {
-              "source_entity": "Leer lassen, um die Stoppuhr nur mit Buttons, Aktionen und Automationen zu steuern.",
-              "running_states": "Zustände der Quell-Entität, in denen die Stoppuhr läuft, z. B. „playing“ oder „on“. Eigene Werte können eingetippt werden.",
+              "source_entities": "Leer lassen, um die Stoppuhr nur mit Buttons, Aktionen und Automationen zu steuern.",
+              "source_combine": "Wie die Zustände mehrerer Quell-Entitäten verknüpft werden. Wirkt erst ab zwei Entitäten.",
+              "running_states": "Zustände, in denen eine Quell-Entität als laufend gilt, z. B. „playing“ oder „on“. Sie gelten für alle Quell-Entitäten. Eigene Werte können eingetippt werden.",
               "grace_period": "Ist die Quelle länger als diese Zeit nicht verfügbar oder unbekannt, pausiert die Stoppuhr rückwirkend ab Beginn des Ausfalls. 0 schaltet die Karenzzeit aus: Nicht verfügbar pausiert dann sofort wie jeder andere Zustand, der nicht als laufend gilt. Höchstens 1 Stunde.",
               "auto_stop": "Bleibt die Quelle so lange inaktiv wie unten eingestellt, endet die Session: Die Stoppuhr wird angehalten und auf null gesetzt. Die Zeit der Session bleibt im Sensor „Letzte Session“ erhalten. Der nächste Start der Quelle beginnt eine neue Session.",
               "auto_stop_delay": "Wie lange die Quelle inaktiv sein muss, bis die Stoppuhr gestoppt wird, höchstens 7 Tage. 0: Die Stoppuhr stoppt, sobald die Quelle inaktiv wird."
@@ -81,9 +85,17 @@
     "error": {
       "interval_too_long": "Das Intervall darf höchstens 24 Stunden betragen.",
       "update_interval_out_of_range": "Das Aktualisierungsintervall muss zwischen 1 Sekunde und 1 Stunde liegen.",
-      "running_states_required": "Wähle mindestens einen Lauf-Zustand für die Quell-Entität.",
+      "running_states_required": "Wähle mindestens einen Lauf-Zustand für die Quell-Entitäten.",
       "grace_period_too_long": "Die Karenzzeit darf höchstens 1 Stunde betragen.",
       "auto_stop_delay_too_long": "Die Inaktivität bis zum Stopp darf höchstens 7 Tage betragen."
+    }
+  },
+  "selector": {
+    "source_combine": {
+      "options": {
+        "or": "Mindestens eine läuft (ODER)",
+        "and": "Alle laufen (UND)"
+      }
     }
   },
   "entity": {
@@ -110,6 +122,9 @@
         "state_attributes": {
           "elapsed_formatted": {
             "name": "Laufzeit (formatiert)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Laufzeit (kurz)"
           },
           "status": {
             "name": "Status",
@@ -147,6 +162,9 @@
           "elapsed_formatted": {
             "name": "Letzte Session (formatiert)"
           },
+          "elapsed_formatted_short": {
+            "name": "Letzte Session (kurz)"
+          },
           "ended_at": {
             "name": "Beendet um"
           }
@@ -172,6 +190,9 @@
           },
           "elapsed_formatted": {
             "name": "Laufzeit (formatiert)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Laufzeit (kurz)"
           },
           "interval_count": {
             "name": "Anzahl Intervalle"

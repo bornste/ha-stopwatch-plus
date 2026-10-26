@@ -38,7 +38,9 @@ def options() -> dict[str, Any]:
 @pytest.fixture
 def config_entry(options: dict[str, Any]) -> MockConfigEntry:
     """A config entry for a stopwatch called "Gaming"."""
-    return MockConfigEntry(domain=DOMAIN, title="Gaming", data={}, options=options)
+    return MockConfigEntry(
+        domain=DOMAIN, title="Gaming", data={}, options=options, minor_version=2
+    )
 
 
 @pytest.fixture

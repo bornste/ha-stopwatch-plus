@@ -16,13 +16,23 @@ MAX_INTERVAL: Final = 24 * 3600
 MIN_UPDATE_INTERVAL: Final = 1
 MAX_UPDATE_INTERVAL: Final = 3600
 
-# Optional source entity binding, durations in seconds
-CONF_SOURCE_ENTITY: Final = "source_entity"
+# Optional binding to source entities, durations in seconds
+CONF_SOURCE_ENTITIES: Final = "source_entities"
+CONF_SOURCE_COMBINE: Final = "source_combine"
 CONF_RUNNING_STATES: Final = "running_states"
 CONF_GRACE_PERIOD: Final = "grace_period"
 CONF_AUTO_STOP: Final = "auto_stop"
 CONF_AUTO_STOP_DELAY: Final = "auto_stop_delay"
 
+# Single source entity of config entries before minor version 2
+CONF_SOURCE_ENTITY: Final = "source_entity"
+
+# How the states of several source entities are combined
+SOURCE_COMBINE_OR: Final = "or"  # runs while at least one source is running
+SOURCE_COMBINE_AND: Final = "and"  # runs while all sources are running
+SOURCE_COMBINE_MODES: Final = [SOURCE_COMBINE_OR, SOURCE_COMBINE_AND]
+
+DEFAULT_SOURCE_COMBINE: Final = SOURCE_COMBINE_OR
 DEFAULT_RUNNING_STATES: Final = ["playing", "on"]
 DEFAULT_GRACE_PERIOD: Final = 120
 MAX_GRACE_PERIOD: Final = 3600

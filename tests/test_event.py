@@ -77,6 +77,7 @@ async def test_reports_interval(
     attributes = hass.states.get(EVENTS).attributes
     assert attributes["event_type"] == "interval"
     assert attributes["elapsed_formatted"] == "00:01:00"
+    assert attributes["elapsed_formatted_short"] == "00:01"
     assert attributes["interval_count"] == 1
 
 

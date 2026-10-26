@@ -16,18 +16,20 @@
         },
         "sections": {
           "source": {
-            "name": "Entité source",
-            "description": "Facultatif : le chronomètre suit une entité, par ex. un téléviseur ou un capteur de fenêtre. Il tourne tant que l'entité est dans l'un des états de fonctionnement et se met en pause sinon.",
+            "name": "Entités sources",
+            "description": "Facultatif : le chronomètre suit une ou plusieurs entités, par ex. un téléviseur ou un capteur de fenêtre. Il tourne tant que les entités sont dans l'un des états de fonctionnement et se met en pause sinon. Avec plusieurs entités, « Combinaison » détermine quand elles comptent ensemble comme en fonctionnement ; le délai de grâce et l'arrêt automatique s'appliquent à cet état combiné.",
             "data": {
-              "source_entity": "Entité source",
+              "source_entities": "Entités sources",
+              "source_combine": "Combinaison",
               "running_states": "États de fonctionnement",
               "grace_period": "Délai de grâce en cas d'indisponibilité",
               "auto_stop": "Arrêter automatiquement après une inactivité",
               "auto_stop_delay": "Inactivité avant l'arrêt"
             },
             "data_description": {
-              "source_entity": "Laissez vide pour commander le chronomètre uniquement avec les boutons, les actions et les automatisations.",
-              "running_states": "États de l'entité source dans lesquels le chronomètre tourne, par ex. « playing » ou « on ». Vous pouvez saisir vos propres valeurs.",
+              "source_entities": "Laissez vide pour commander le chronomètre uniquement avec les boutons, les actions et les automatisations.",
+              "source_combine": "Comment les états de plusieurs entités sources sont combinés. N'a d'effet qu'à partir de deux entités.",
+              "running_states": "États dans lesquels une entité source compte comme en fonctionnement, par ex. « playing » ou « on ». Ils s'appliquent à toutes les entités sources. Vous pouvez saisir vos propres valeurs.",
               "grace_period": "Si la source est indisponible ou inconnue plus longtemps que cette durée, le chronomètre se met en pause, avec effet rétroactif au début de la coupure. 0 désactive le délai de grâce : l'indisponibilité met alors immédiatement en pause, comme tout autre état qui n'est pas un état de fonctionnement. 1 heure au maximum.",
               "auto_stop": "Si la source reste inactive pendant le délai ci-dessous, la session se termine : le chronomètre est arrêté et remis à zéro. Le temps de la session reste disponible dans le capteur « Dernière session ». Le prochain démarrage de la source commence une nouvelle session.",
               "auto_stop_delay": "Durée pendant laquelle la source doit être inactive avant l'arrêt du chronomètre, 7 jours au maximum. 0 : le chronomètre s'arrête dès que la source devient inactive."
@@ -39,7 +41,7 @@
     "error": {
       "interval_too_long": "L'intervalle ne peut pas dépasser 24 heures.",
       "update_interval_out_of_range": "L'intervalle de mise à jour doit être compris entre 1 seconde et 1 heure.",
-      "running_states_required": "Sélectionnez au moins un état de fonctionnement pour l'entité source.",
+      "running_states_required": "Sélectionnez au moins un état de fonctionnement pour les entités sources.",
       "grace_period_too_long": "Le délai de grâce ne peut pas dépasser 1 heure.",
       "auto_stop_delay_too_long": "L'inactivité avant l'arrêt ne peut pas dépasser 7 jours."
     }
@@ -58,18 +60,20 @@
         },
         "sections": {
           "source": {
-            "name": "Entité source",
-            "description": "Facultatif : le chronomètre suit une entité, par ex. un téléviseur ou un capteur de fenêtre. Il tourne tant que l'entité est dans l'un des états de fonctionnement et se met en pause sinon.",
+            "name": "Entités sources",
+            "description": "Facultatif : le chronomètre suit une ou plusieurs entités, par ex. un téléviseur ou un capteur de fenêtre. Il tourne tant que les entités sont dans l'un des états de fonctionnement et se met en pause sinon. Avec plusieurs entités, « Combinaison » détermine quand elles comptent ensemble comme en fonctionnement ; le délai de grâce et l'arrêt automatique s'appliquent à cet état combiné.",
             "data": {
-              "source_entity": "Entité source",
+              "source_entities": "Entités sources",
+              "source_combine": "Combinaison",
               "running_states": "États de fonctionnement",
               "grace_period": "Délai de grâce en cas d'indisponibilité",
               "auto_stop": "Arrêter automatiquement après une inactivité",
               "auto_stop_delay": "Inactivité avant l'arrêt"
             },
             "data_description": {
-              "source_entity": "Laissez vide pour commander le chronomètre uniquement avec les boutons, les actions et les automatisations.",
-              "running_states": "États de l'entité source dans lesquels le chronomètre tourne, par ex. « playing » ou « on ». Vous pouvez saisir vos propres valeurs.",
+              "source_entities": "Laissez vide pour commander le chronomètre uniquement avec les boutons, les actions et les automatisations.",
+              "source_combine": "Comment les états de plusieurs entités sources sont combinés. N'a d'effet qu'à partir de deux entités.",
+              "running_states": "États dans lesquels une entité source compte comme en fonctionnement, par ex. « playing » ou « on ». Ils s'appliquent à toutes les entités sources. Vous pouvez saisir vos propres valeurs.",
               "grace_period": "Si la source est indisponible ou inconnue plus longtemps que cette durée, le chronomètre se met en pause, avec effet rétroactif au début de la coupure. 0 désactive le délai de grâce : l'indisponibilité met alors immédiatement en pause, comme tout autre état qui n'est pas un état de fonctionnement. 1 heure au maximum.",
               "auto_stop": "Si la source reste inactive pendant le délai ci-dessous, la session se termine : le chronomètre est arrêté et remis à zéro. Le temps de la session reste disponible dans le capteur « Dernière session ». Le prochain démarrage de la source commence une nouvelle session.",
               "auto_stop_delay": "Durée pendant laquelle la source doit être inactive avant l'arrêt du chronomètre, 7 jours au maximum. 0 : le chronomètre s'arrête dès que la source devient inactive."
@@ -81,9 +85,17 @@
     "error": {
       "interval_too_long": "L'intervalle ne peut pas dépasser 24 heures.",
       "update_interval_out_of_range": "L'intervalle de mise à jour doit être compris entre 1 seconde et 1 heure.",
-      "running_states_required": "Sélectionnez au moins un état de fonctionnement pour l'entité source.",
+      "running_states_required": "Sélectionnez au moins un état de fonctionnement pour les entités sources.",
       "grace_period_too_long": "Le délai de grâce ne peut pas dépasser 1 heure.",
       "auto_stop_delay_too_long": "L'inactivité avant l'arrêt ne peut pas dépasser 7 jours."
+    }
+  },
+  "selector": {
+    "source_combine": {
+      "options": {
+        "or": "Au moins une fonctionne (OU)",
+        "and": "Toutes fonctionnent (ET)"
+      }
     }
   },
   "entity": {
@@ -110,6 +122,9 @@
         "state_attributes": {
           "elapsed_formatted": {
             "name": "Temps écoulé (formaté)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Temps écoulé (court)"
           },
           "status": {
             "name": "État",
@@ -147,6 +162,9 @@
           "elapsed_formatted": {
             "name": "Dernière session (formatée)"
           },
+          "elapsed_formatted_short": {
+            "name": "Dernière session (courte)"
+          },
           "ended_at": {
             "name": "Terminée à"
           }
@@ -172,6 +190,9 @@
           },
           "elapsed_formatted": {
             "name": "Temps écoulé (formaté)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Temps écoulé (court)"
           },
           "interval_count": {
             "name": "Nombre d'intervalles"

@@ -9,15 +9,13 @@
 [![Release](https://img.shields.io/github/v/release/bornste/ha-stopwatch-plus?sort=semver&label=Release&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases) 
 [![Downloads](https://img.shields.io/github/downloads/bornste/ha-stopwatch-plus/total?label=Downloads&style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/releases)
 
-[![HACS: custom repository, default pending](https://img.shields.io/badge/HACS-Custom%20%C2%B7%20default%20pending-orange?style=flat-square)](https://github.com/hacs/default/pull/11334)
+[![HACS: Default](https://img.shields.io/badge/HACS-Default-41BDF5?style=flat-square)](https://my.home-assistant.io/redirect/hacs_repository/?owner=bornste&repository=ha-stopwatch-plus&category=integration)
 [![Home Assistant](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fbornste%2Fha-stopwatch-plus%2Fmain%2Fhacs.json&query=%24.homeassistant&label=Home%20Assistant&suffix=%2B&color=41BDF5&logo=homeassistant&logoColor=white&style=flat-square)](https://www.home-assistant.io/)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](https://github.com/bornste/ha-stopwatch-plus/blob/main/LICENSE)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20me-FF5E5B?logo=ko-fi&logoColor=white&style=flat-square)](https://ko-fi.com/bornste)
 
 Home Assistant's built-in `timer` counts down. Stopwatch Plus counts **up**: start, pause and resume it from the dashboard, or let it follow an entity – for example, it runs while the TV is playing and pauses when it is off. Interval events announce "one hour of screen time" or "the window has been open for 10 minutes", and a dashboard card shows the time live, second by second.
-
-> **Not in the HACS store yet:** Stopwatch Plus is [waiting for inclusion](https://github.com/hacs/default/pull/11334) in the default HACS store. Until then, search in HACS will not find it – add it as a **custom repository** first. It takes one click, see [Installation](#installation).
 
 <img alt="Stopwatch Plus card of a running stopwatch" src="https://raw.githubusercontent.com/bornste/ha-stopwatch-plus/main/docs/images/card-demo.gif" width="420">
 
@@ -29,7 +27,7 @@ Home Assistant's built-in `timer` counts down. Stopwatch Plus counts **up**: sta
 - [Configuration](#configuration)
 - [Dashboard card](#dashboard-card)
 - [Automations](#automations)
-- [Following a source entity](#following-a-source-entity)
+- [Following source entities](#following-source-entities)
 - [Reference](#reference)
 - [Tips](#tips)
 - [FAQ](#faq)
@@ -39,7 +37,7 @@ Home Assistant's built-in `timer` counts down. Stopwatch Plus counts **up**: sta
 
 - **Any number of stopwatches**, each one its own device with sensors, buttons and an event entity.
 - **Dashboard card and tile card feature** that count live in the browser – included and loaded automatically. [More](#dashboard-card)
-- **Follows a source entity** if you like: runs while the TV, a window sensor or a switch is in a "running" state, pauses otherwise, and ends the session after a while of inactivity. [More](#following-a-source-entity)
+- **Follows source entities** if you like: runs while the TV, a window sensor or a switch is in a "running" state, pauses otherwise, and ends the session after a while of inactivity. Several entities can be combined with OR or AND, e.g. several game consoles. [More](#following-source-entities)
 - **Interval events** after every full interval of running time; pauses do not count. [More](#automations)
 - **Triggers in the automation editor** for every event, without typing event names. [More](#automations)
 - **Last session** kept in its own sensor after the stopwatch went back to zero.
@@ -58,20 +56,15 @@ Home Assistant's built-in `timer` counts down. Stopwatch Plus counts **up**: sta
 
 ## Installation
 
-### With HACS as a custom repository (recommended)
+### With HACS (recommended)
 
-> **Important:** Stopwatch Plus is [not in the default HACS store yet](https://github.com/hacs/default/pull/11334), so HACS only finds it after you add this repository as a custom repository. The button below does that for you.
+Stopwatch Plus is in the default HACS store.
 
 [![Open your Home Assistant instance and open this repository in HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=bornste&repository=ha-stopwatch-plus&category=integration)
 
-Or step by step:
-
-1. In Home Assistant, open **HACS**, then the menu (three dots, top right) → **Custom repositories**.
-2. Enter `https://github.com/bornste/ha-stopwatch-plus`, choose the type **Integration** and select **Add**.
-3. Search for **Stopwatch Plus** in HACS, open it and select **Download**.
-4. Restart Home Assistant.
-
-The button above does steps 1 and 2 for you.
+1. In Home Assistant, open **HACS** and search for **Stopwatch Plus** – or use the button above, which opens it directly.
+2. Open it and select **Download**.
+3. Restart Home Assistant.
 
 ### Manually
 
@@ -91,15 +84,16 @@ Go to **Settings → Devices & services → Add integration**, search for **Stop
 | Interval | 0 (off) | Fires an interval event every time this much running time has passed, at most 24 hours. |
 | Sensor update interval | 60 s | How often the sensors update while running, from 1 second to 1 hour. Every update is written to the database, so short intervals fill it up ([FAQ](#faq)). Interval events and the card are not affected: they are always on time. |
 
-In the collapsible section **Source entity** (optional, see [Following a source entity](#following-a-source-entity)):
+In the collapsible section **Source entities** (optional, see [Following source entities](#following-source-entities)):
 
 | Option | Default | Meaning |
 |---|---|---|
-| Source entity | – | The entity to follow, e.g. `media_player.living_room_tv`. Empty: control the stopwatch only by hand and with automations. |
-| Running states | `playing`, `on` | The stopwatch runs in these states and pauses in all others. Own states can be typed in. |
+| Source entities | – | One or more entities to follow, e.g. `media_player.living_room_tv`. Empty: control the stopwatch only by hand and with automations. |
+| Combine | At least one (OR) | With several entities: run while at least one of them is running (OR), or only while all of them are (AND). |
+| Running states | `playing`, `on` | An entity counts as running in these states; they apply to all source entities. Own states can be typed in. |
 | Grace period when unavailable | 2 min | Short dropouts to `unavailable` are ignored for this long, at most 1 hour. 0: pause right away. |
-| Stop automatically after inactivity | off | Ends the session when the source stays inactive for the delay below. |
-| Inactivity before stopping | 30 min | At most 7 days. 0: stop as soon as the source becomes inactive. |
+| Stop automatically after inactivity | off | Ends the session when the sources stay inactive for the delay below. |
+| Inactivity before stopping | 30 min | At most 7 days. 0: stop as soon as the sources become inactive. |
 
 ## Dashboard card
 
@@ -197,15 +191,26 @@ actions:
 
 The stopwatches can also be controlled from automations and scripts with the [actions](#actions), e.g. `stopwatch_plus.start`.
 
-## Following a source entity
+## Following source entities
 
-A stopwatch can follow any entity, for example `media_player.living_room_tv` or `binary_sensor.bedroom_window`. Set it up in the section **Source entity** when creating the stopwatch or later via **Configure**:
+A stopwatch can follow any entity, for example `media_player.living_room_tv` or `binary_sensor.bedroom_window`. Set it up in the section **Source entities** when creating the stopwatch or later via **Configure**:
 
 - **Running states:** the stopwatch runs while the entity is in one of these states (e.g. `playing`) and pauses in any other state.
 - **Grace period:** some devices briefly report `unavailable`. Within the grace period nothing happens; if the dropout lasts longer, the stopwatch pauses, backdated to the start of the dropout. Set it to 0 to turn it off: `unavailable` then pauses right away, like any other state that is not a running state.
 - **Stop automatically after inactivity:** if the entity stays inactive for the configured delay (e.g. 30 minutes), the session ends: the stopwatch is stopped and set back to zero, and its next start begins a new session. The time of the session stays in the sensor *Last session* and in the `stopped` event. Coming back within the delay simply resumes the session. With a delay of 0, the stopwatch stops as soon as the entity becomes inactive.
 
 Buttons, the card and the actions keep working while a source is set; the next change of the source takes over again.
+
+### Several source entities
+
+A stopwatch can follow several entities at once. **Combine** decides when they count as running together:
+
+- **At least one is running (OR):** screen time for several devices – the stopwatch runs while the Xbox, the PlayStation *or* the tablet is in use. Switching from one device to the other keeps it running without a pause.
+- **All are running (AND):** a condition on top – the stopwatch runs only while the Xbox is on *and* a sensor reports that a game is running.
+
+The grace period and the automatic stop apply to the combined state. A source that is `unavailable` only matters when the others leave the result open: with OR, a dropout of one console is ignored while another one is running; with AND, it only matters while all other sources are running.
+
+The running states apply to all source entities. If the entities need different states, e.g. a thermostat in `heat` and a window that is `on`, combine them in a [template binary sensor](https://www.home-assistant.io/integrations/template/) and use that as the source.
 
 ## Reference
 
@@ -215,9 +220,9 @@ Each stopwatch is a device with these entities (IDs for a stopwatch named "Scree
 
 | Entity | Content |
 |---|---|
-| `sensor.screen_time_elapsed_time` | Running time in seconds. Attributes: `elapsed_formatted` (`HH:MM:SS`), `status`, `started_at`, `running_since`, `accumulated_seconds`, `interval_count`. |
+| `sensor.screen_time_elapsed_time` | Running time in seconds. Attributes: `elapsed_formatted` (`HH:MM:SS`), `elapsed_formatted_short` (`HH:MM`), `status`, `started_at`, `running_since`, `accumulated_seconds`, `interval_count`. |
 | `sensor.screen_time_status` | `idle`, `running` or `paused`. |
-| `sensor.screen_time_last_session` | Running time of the last session, set when the time goes back to zero. Attributes: `elapsed_formatted`, `ended_at`. |
+| `sensor.screen_time_last_session` | Running time of the last session, set when the time goes back to zero. Attributes: `elapsed_formatted`, `elapsed_formatted_short`, `ended_at`. |
 | `event.screen_time_events` | Reports every event, for the trigger *Event received* and the logbook. |
 | `button.screen_time_start`, `…_pause`, `…_stop`, `…_reset`, `…_start_pause` | The same as the actions below. |
 
@@ -243,11 +248,11 @@ Event data:
 |---|---|
 | `type` | Event type, see above. |
 | `entity_id`, `device_id`, `name` | The elapsed time sensor, the device and the name of the stopwatch. |
-| `elapsed_seconds`, `elapsed_formatted` | Running time at the moment of the event. For `stopped` and `reset`: the time the session reached. For `interval`: the exact threshold, e.g. `3600`. |
+| `elapsed_seconds`, `elapsed_formatted`, `elapsed_formatted_short` | Running time at the moment of the event. For `stopped` and `reset`: the time the session reached. For `interval`: the exact threshold, e.g. `3600`. |
 | `interval_count` | Number of intervals reached in this session. |
 | `source` | What caused the change: `action`, `button`, `source_entity` or `auto_stop`; empty for `interval`. |
 
-`elapsed_formatted` uses `HH:MM:SS`, and from 24 hours on `d.HH:MM:SS` (e.g. `00:02:43`, `1.02:03:04`).
+`elapsed_formatted` uses `HH:MM:SS`, and from 24 hours on `d.HH:MM:SS` (e.g. `00:02:43`, `1.02:03:04`). `elapsed_formatted_short` leaves out the seconds: `HH:MM` and `d.HH:MM` (e.g. `00:02`, `1.02:03`); the seconds are cut off, not rounded.
 
 ### Actions
 
@@ -280,7 +285,7 @@ actions:
 
 **Total per day or week.** Home Assistant's built-in [History stats](https://www.home-assistant.io/integrations/history_stats/) integration adds up how long `sensor.screen_time_status` was `running`, e.g. the screen time today.
 
-**Show the time without the card.** The elapsed time sensor reports whole seconds, e.g. `163 s`. In the settings of the sensor (gear icon), set the display unit to *minutes* to see `2 min 43 s`; automations still see seconds. Cards that can show an attribute can use `elapsed_formatted` (`HH:MM:SS`), which updates together with the sensor.
+**Show the time without the card.** The elapsed time sensor reports whole seconds, e.g. `163 s`. In the settings of the sensor (gear icon), set the display unit to *minutes* to see `2 min 43 s`; automations still see seconds. Cards that can show an attribute can use `elapsed_formatted` (`HH:MM:SS`) or `elapsed_formatted_short` (`HH:MM`), which update together with the sensor. With the default update interval of one minute, `elapsed_formatted_short` is always up to date.
 
 ## FAQ
 

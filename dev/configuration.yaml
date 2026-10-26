@@ -16,6 +16,7 @@ logger:
 # Simulated game console to test the source entity binding.
 # Change "Fake console state" to switch between playing / idle / off,
 # and turn on "Fake console unavailable" to simulate a dropout.
+# "Fake tablet" is a second source to try out OR and AND.
 input_select:
   fake_console_state:
     name: Fake console state
@@ -28,6 +29,8 @@ input_select:
 input_boolean:
   fake_console_unavailable:
     name: Fake console unavailable
+  fake_tablet:
+    name: Fake tablet
 
 template:
   - sensor:

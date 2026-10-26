@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Batterien – Dialog</title>
+<style>
+  :root {
+    --ground: #0a0a0b; --ink: #f3f3f4;
+    --panel: color-mix(in srgb, var(--ink) 7%, var(--ground));
+    --tile: color-mix(in srgb, var(--ink) 12%, var(--ground));
+    --tileHi: color-mix(in srgb, var(--ink) 17%, var(--ground));
+    --fg2: color-mix(in srgb, var(--ink) 62%, var(--ground));
+    --fg3: color-mix(in srgb, var(--ink) 40%, var(--ground));
+    --line: color-mix(in srgb, var(--ink) 16%, var(--ground));
+    --accent: #f5c48a; --success: #a8d5a2; --danger: #e8908a;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font-family: Roboto, "Segoe UI", system-ui, sans-serif; padding: 24px 16px 48px; }
+  h1 { font-size: 18px; font-weight: 400; margin: 0 0 4px; }
+  .intro { font-size: 13px; color: var(--fg2); margin: 0 0 24px; max-width: 1000px; line-height: 1.5; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 520px)); gap: 32px; align-items: start; }
+  .cap { font-size: 13px; color: var(--fg2); margin: 0 0 10px; line-height: 1.45; } .cap b { color: var(--ink); font-weight: 500; }
+
+  /* popup */
+  .popup { background: var(--panel); border-radius: 28px; padding: 18px 16px 16px; }
+  .head { display: flex; align-items: center; gap: 12px; padding: 0 4px 14px; }
+  .head .title { font-size: 20px; font-weight: 400; flex: 1; }
+  .head .summary { font-size: 13px; color: var(--fg2); }
+  .head .summary b { font-weight: 500; }
+  .close { width: 36px; height: 36px; border-radius: 50%; background: var(--tile); display: grid; place-items: center; color: var(--fg2); font-size: 18px; }
+
+  .section { margin-top: 14px; }
+  .section:first-of-type { margin-top: 0; }
+  .label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--fg2); margin: 0 4px 8px; }
+  .label .count { color: var(--fg3); }
+  .label i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+
+  /* rows for urgent items */
+  .rows { display: flex; flex-direction: column; gap: 8px; }
+  .row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 12px 14px; border-radius: 14px; background: var(--tile); position: relative; overflow: hidden; }
+  .row.danger { background: color-mix(in srgb, var(--danger) 16%, var(--tileHi)); }
+  .row.critical { background: color-mix(in srgb, var(--accent) 14%, var(--tileHi)); }
+  .row .name { font-size: 15px; }
+  .row .sub { grid-column: 1; font-size: 12px; color: var(--fg2); }
+  .row .val { grid-row: 1 / span 2; align-self: center; grid-column: 2; font-size: 22px; font-weight: 300; text-align: right; }
+  .row .val small { font-size: 13px; color: var(--fg3); margin-left: 1px; }
+  .row.danger .val { font-size: 15px; font-weight: 500; color: var(--danger); }
+  .row.critical .val { color: var(--accent); }
+  .row .track { grid-column: 1 / -1; height: 4px; border-radius: 2px; margin-top: 6px; background: color-mix(in srgb, var(--ink) 8%, transparent); }
+  .row .track span { display: block; height: 100%; width: var(--w); border-radius: 2px; background: var(--c); }
+
+  /* ok items, variant A: compact two-column rows with a mini bar */
+  .ok { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .ok .item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 8px; padding: 8px 12px 10px; border-radius: 12px; background: var(--tile); position: relative; overflow: hidden; }
+  .ok .item .n { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ok .item .v { font-size: 13px; color: var(--fg2); }
+  .ok .item .track { grid-column: 1 / -1; height: 3px; border-radius: 2px; background: color-mix(in srgb, var(--ink) 8%, transparent); }
+  .ok .item .track span { display: block; height: 100%; width: var(--w); border-radius: 2px; background: color-mix(in srgb, var(--success) 70%, var(--tile)); }
+
+  /* ok items, variant B: plain list, no tiles */
+  .list { background: var(--tile); border-radius: 14px; padding: 4px 14px; }
+  .list .li { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .list .li:last-child { border-bottom: 0; }
+  .list .li .n { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .list .li .a { color: var(--fg3); font-size: 12px; }
+  .list .li .v { width: 40px; text-align: right; color: var(--fg2); }
+
+  /* ok items, variant C: collapsed */
+  .collapsed { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--tile); font-size: 14px; }
+  .collapsed .t { flex: 1; } .collapsed .t span { color: var(--fg2); font-size: 13px; margin-left: 6px; }
+  .collapsed .chev { color: var(--fg2); }
+  .collapsed.open { border-radius: 14px 14px 6px 6px; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<h1>Batterien – Dialog nach Dringlichkeit</h1>
+<p class="intro">Echte Werte von heute. Oben, was zu tun ist (offline/leer in Rot, kritisch unter 20 % im Akzent, bald unter 40 % neutral), darunter alle übrigen. Balken bei den grossen Karten jetzt in der Karte. Links zugeklappt, rechts aufgeklappt. Liste automatisch aus allen Batteriesensoren ohne Label «Exclude»; Namen per Konfiguration.</p>
+<div class="grid" id="grid"></div>
+<script>
+  const urgent = `
+    <div class="section"><div class="label" style="--c: var(--danger)"><i></i>Leer oder offline <span class="count">1</span></div>
+      <div class="rows">
+        <div class="row danger"><div class="name">RuuviTag 2</div><div class="sub">keine Meldung seit 16 Std. · zuletzt 2169 mV</div><div class="val">offline</div><div class="track"><span style="--w:0%; --c: var(--danger)"></span></div></div>
+      </div></div>
+    <div class="section"><div class="label" style="--c: var(--accent)"><i></i>Kritisch, unter 20 % <span class="count">1</span></div>
+      <div class="rows">
+        <div class="row critical"><div class="name">Fenster Sviat rechts</div><div class="sub">Kinderzimmer</div><div class="val">5<small>%</small></div><div class="track"><span style="--w:5%; --c: var(--accent)"></span></div></div>
+      </div></div>
+    <div class="section"><div class="label" style="--c: var(--fg2)"><i></i>Bald wechseln, unter 40 % <span class="count">2</span></div>
+      <div class="rows">
+        <div class="row"><div class="name">Fenster Büro links</div><div class="sub">Büro</div><div class="val">20<small>%</small></div><div class="track"><span style="--w:20%; --c: var(--fg2)"></span></div></div>
+        <div class="row"><div class="name">Bewegungsmelder</div><div class="sub">Bad</div><div class="val">34<small>%</small></div><div class="track"><span style="--w:34%; --c: var(--fg2)"></span></div></div>
+      </div></div>`;
+  const ok = [
+    ["Wetter aussen", "Balkon", 50], ["Balkontüre", "Wohnzimmer", 58], ["RuuviTag 1", "", 58], ["Fenster Schlafen", "Schlafzimmer", 70],
+    ["Klima Arbeitsplatz", "Büro", 72], ["Schalter Schminktisch", "", 75], ["Klima Sviat", "Kinderzimmer", 76], ["Klima Schlafen", "Schlafzimmer", 76],
+    ["Klima Bad", "Bad", 77], ["Klima Wohnen", "Wohnzimmer", 84], ["Bewegungsmelder WC", "WC / Waschen", 99], ["Fire Tablet", "Wohnzimmer", 100],
+    ["Schalter Arbeitsplatz", "Büro", 100], ["Schalter Wohnen", "Wohnzimmer", 100], ["Schalter Esstisch", "", 100], ["Schalter Büro", "", 100], ["Schalter Schlafen", "", 100]];
+  const okLabel = `<div class="label" style="--c: var(--success)"><i></i>In Ordnung <span class="count">${ok.length}</span></div>`;
+  const variantA = `<div class="ok">${ok.map(([n, a, v]) => `<div class="item"><div class="n">${n}</div><div class="v">${v} %</div><div class="track"><span style="--w:${v}%"></span></div></div>`).join("")}</div>`;
+  const variantB = `<div class="list">${ok.map(([n, a, v]) => `<div class="li"><span class="n">${n}</span><span class="a">${a}</span><span class="v">${v} %</span></div>`).join("")}</div>`;
+  const variantC = `<div class="collapsed"><span class="t">${ok.length} Batterien<span>alle über 40 %, tiefste 50 %</span></span><span class="chev">▾</span></div>`;
+  const head = `<div class="head"><span class="title">Batterien</span><span class="summary"><b style="color:var(--danger)">1 offline</b> · <b style="color:var(--accent)">1 kritisch</b> · 2 bald</span><span class="close">✕</span></div>`;
+  const variantOpen = `<div class="collapsed open"><span class="t">${ok.length} Batterien<span>alle über 40 %, tiefste 50 %</span></span><span class="chev">▴</span></div>${variantA}`;
+  const variants = [
+    ["Zugeklappt (Standard)", "«In Ordnung» als eine Zeile mit Anzahl und tiefstem Wert. Antippen klappt auf.", variantC],
+    ["Aufgeklappt", "Nach dem Antippen: kompakte Kacheln in zwei Spalten mit Prozent und Balken. Erneut antippen klappt zu.", variantOpen],
+  ];
+  document.getElementById("grid").innerHTML = variants.map(([t, d, okHtml]) =>
+    `<div><div class="cap"><b>${t}</b><br>${d}</div><div class="popup">${head}${urgent}<div class="section">${okLabel}${okHtml}</div></div></div>`).join("");
+</script>
+</body>
+</html>

@@ -16,18 +16,20 @@
         },
         "sections": {
           "source": {
-            "name": "Source entity",
-            "description": "Optional: let the stopwatch follow an entity, e.g. a TV or a window sensor. It runs while the entity is in one of the running states and pauses otherwise.",
+            "name": "Source entities",
+            "description": "Optional: let the stopwatch follow one or more entities, e.g. a TV or a window sensor. It runs while the entities are in one of the running states and pauses otherwise. With several entities, \"Combine\" decides when they count as running together; the grace period and the automatic stop apply to this combined state.",
             "data": {
-              "source_entity": "Source entity",
+              "source_entities": "Source entities",
+              "source_combine": "Combine",
               "running_states": "Running states",
               "grace_period": "Grace period when unavailable",
               "auto_stop": "Stop automatically after inactivity",
               "auto_stop_delay": "Inactivity before stopping"
             },
             "data_description": {
-              "source_entity": "Leave empty to control the stopwatch only with buttons, actions and automations.",
-              "running_states": "States of the source entity in which the stopwatch runs, e.g. \"playing\" or \"on\". You can type your own.",
+              "source_entities": "Leave empty to control the stopwatch only with buttons, actions and automations.",
+              "source_combine": "How the states of several source entities are combined. Only matters with two or more.",
+              "running_states": "States in which a source entity counts as running, e.g. \"playing\" or \"on\". They apply to all source entities. You can type your own.",
               "grace_period": "If the source is unavailable or unknown for longer than this, the stopwatch pauses, backdated to the start of the dropout. 0 turns the grace period off: unavailable then pauses right away like any other non-running state. At most 1 hour.",
               "auto_stop": "When the source stays inactive for the delay below, the session ends: the stopwatch is stopped and set back to zero. The time of the session remains in the sensor \"Last session\". The next start of the source begins a new session.",
               "auto_stop_delay": "How long the source must be inactive before the stopwatch is stopped, at most 7 days. 0: the stopwatch stops as soon as the source becomes inactive."
@@ -39,7 +41,7 @@
     "error": {
       "interval_too_long": "The interval can be at most 24 hours.",
       "update_interval_out_of_range": "The update interval must be between 1 second and 1 hour.",
-      "running_states_required": "Select at least one running state for the source entity.",
+      "running_states_required": "Select at least one running state for the source entities.",
       "grace_period_too_long": "The grace period can be at most 1 hour.",
       "auto_stop_delay_too_long": "The inactivity before stopping can be at most 7 days."
     }
@@ -58,18 +60,20 @@
         },
         "sections": {
           "source": {
-            "name": "Source entity",
-            "description": "Optional: let the stopwatch follow an entity, e.g. a TV or a window sensor. It runs while the entity is in one of the running states and pauses otherwise.",
+            "name": "Source entities",
+            "description": "Optional: let the stopwatch follow one or more entities, e.g. a TV or a window sensor. It runs while the entities are in one of the running states and pauses otherwise. With several entities, \"Combine\" decides when they count as running together; the grace period and the automatic stop apply to this combined state.",
             "data": {
-              "source_entity": "Source entity",
+              "source_entities": "Source entities",
+              "source_combine": "Combine",
               "running_states": "Running states",
               "grace_period": "Grace period when unavailable",
               "auto_stop": "Stop automatically after inactivity",
               "auto_stop_delay": "Inactivity before stopping"
             },
             "data_description": {
-              "source_entity": "Leave empty to control the stopwatch only with buttons, actions and automations.",
-              "running_states": "States of the source entity in which the stopwatch runs, e.g. \"playing\" or \"on\". You can type your own.",
+              "source_entities": "Leave empty to control the stopwatch only with buttons, actions and automations.",
+              "source_combine": "How the states of several source entities are combined. Only matters with two or more.",
+              "running_states": "States in which a source entity counts as running, e.g. \"playing\" or \"on\". They apply to all source entities. You can type your own.",
               "grace_period": "If the source is unavailable or unknown for longer than this, the stopwatch pauses, backdated to the start of the dropout. 0 turns the grace period off: unavailable then pauses right away like any other non-running state. At most 1 hour.",
               "auto_stop": "When the source stays inactive for the delay below, the session ends: the stopwatch is stopped and set back to zero. The time of the session remains in the sensor \"Last session\". The next start of the source begins a new session.",
               "auto_stop_delay": "How long the source must be inactive before the stopwatch is stopped, at most 7 days. 0: the stopwatch stops as soon as the source becomes inactive."
@@ -81,9 +85,17 @@
     "error": {
       "interval_too_long": "The interval can be at most 24 hours.",
       "update_interval_out_of_range": "The update interval must be between 1 second and 1 hour.",
-      "running_states_required": "Select at least one running state for the source entity.",
+      "running_states_required": "Select at least one running state for the source entities.",
       "grace_period_too_long": "The grace period can be at most 1 hour.",
       "auto_stop_delay_too_long": "The inactivity before stopping can be at most 7 days."
+    }
+  },
+  "selector": {
+    "source_combine": {
+      "options": {
+        "or": "At least one is running (OR)",
+        "and": "All are running (AND)"
+      }
     }
   },
   "entity": {
@@ -110,6 +122,9 @@
         "state_attributes": {
           "elapsed_formatted": {
             "name": "Elapsed time (formatted)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Elapsed time (short)"
           },
           "status": {
             "name": "Status",
@@ -147,6 +162,9 @@
           "elapsed_formatted": {
             "name": "Last session (formatted)"
           },
+          "elapsed_formatted_short": {
+            "name": "Last session (short)"
+          },
           "ended_at": {
             "name": "Ended at"
           }
@@ -172,6 +190,9 @@
           },
           "elapsed_formatted": {
             "name": "Elapsed time (formatted)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Elapsed time (short)"
           },
           "interval_count": {
             "name": "Interval count"

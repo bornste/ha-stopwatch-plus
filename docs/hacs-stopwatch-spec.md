@@ -13,7 +13,7 @@ Last updated: 2026-09-26. Repository: https://github.com/bornste/ha-stopwatch-pl
 | Integration type | `service` – stopwatches are listed under Settings → Devices & services → Integrations, one device per stopwatch; not a helper, so they do not fill up the helper list |
 | Live display | Attributes allow client-side counting; a dashboard card and a tile card feature bundled with the integration (see below) |
 | Home Assistant restart | State is restored; if the stopwatch was running, the downtime is counted |
-| Source entity | Optional: an entity plus the states that count as "running" (e.g. `media_player.living_room_tv` = `playing`) → start/resume and pause automatically |
+| Source entities | Optional: one or more entities plus the states that count as "running" (e.g. `media_player.living_room_tv` = `playing`) → start/resume and pause automatically; several entities combined with OR (default) or AND |
 | Auto-stop | Optional (on/off) with a configurable inactivity delay (see below) |
 | Unavailable source | Grace period before the stopwatch reacts (see below) |
 | Interval events | Configurable interval of running time (pauses do not count), with second precision |
@@ -38,15 +38,15 @@ target:
 
 Entity IDs are derived from the English entity names, whatever the language of the Home Assistant instance.
 
-- `sensor.<name>_elapsed_time` – elapsed running time (seconds, duration, display precision 0). Attributes: `elapsed_formatted`, `status`, `started_at`, `running_since`, `accumulated_seconds`, `interval_count`. `elapsed_formatted` is excluded from the recorder (it is derived from the state).
+- `sensor.<name>_elapsed_time` – elapsed running time (seconds, duration, display precision 0). Attributes: `elapsed_formatted`, `elapsed_formatted_short`, `status`, `started_at`, `running_since`, `accumulated_seconds`, `interval_count`. Both formatted attributes are excluded from the recorder (they are derived from the state).
 - `sensor.<name>_status` – enum: `idle` / `running` / `paused` (translated).
-- `sensor.<name>_last_session` – running time of the last session (seconds, duration, display precision 0), `unknown` until a first session ended. Set whenever a time above 0 goes back to zero (stop, reset, auto-stop); pausing does not change it. Attributes: `elapsed_formatted` (not recorded), `ended_at`. Persisted with the state.
+- `sensor.<name>_last_session` – running time of the last session (seconds, duration, display precision 0), `unknown` until a first session ended. Set whenever a time above 0 goes back to zero (stop, reset, auto-stop); pausing does not change it. Attributes: `elapsed_formatted`, `elapsed_formatted_short` (both not recorded), `ended_at`. Persisted with the state.
 - `button.<name>_start` – starts or resumes.
 - `button.<name>_pause`
 - `button.<name>_stop` – stops and sets back to zero (`idle`).
 - `button.<name>_reset` – sets back to zero; a running stopwatch keeps running.
 - `button.<name>_start_pause` – pauses when running, otherwise starts or resumes (like `stopwatch_plus.toggle`).
-- `event.<name>_events` – reports every stopwatch event (event types `started`, `paused`, `resumed`, `stopped`, `reset`, `interval`); attributes: `elapsed_seconds`, `elapsed_formatted`, `interval_count`, `source`.
+- `event.<name>_events` – reports every stopwatch event (event types `started`, `paused`, `resumed`, `stopped`, `reset`, `interval`); attributes: `elapsed_seconds`, `elapsed_formatted`, `elapsed_formatted_short`, `interval_count`, `source`.
 
 ## Actions
 
@@ -60,7 +60,21 @@ Each call acts once per stopwatch, even if the target resolves to several entiti
 
 Commands without effect (starting a running stopwatch, pausing a stopwatch that is not running, stopping or resetting an idle one) do nothing and fire no event. An action whose target contains no loaded stopwatch raises a validation error.
 
-## Source entity
+## Source entities
+
+Options `source_entities` (list) and `source_combine` (`or` / `and`). The states of all source entities are combined into one state, which drives the stopwatch as described below (start, pause, grace period, auto-stop). The running states apply to all source entities.
+
+| Combined state | OR | AND |
+|---|---|---|
+| running | at least one source is running | all sources are running |
+| inactive | no source is running, none is unavailable | at least one source is inactive |
+| unavailable | no source is running, at least one is unavailable | no source is inactive, at least one is unavailable |
+
+An unavailable source might be running, so it only decides where its real state would. Only changes of the combined state count; with OR, a second source starting while one runs does not undo a manual pause.
+
+Config entries up to minor version 1 have a single `source_entity`; `async_migrate_entry` turns it into `source_entities: [entity]` with `source_combine: or` (minor version 2). Entries of a newer major version are not loaded.
+
+In the following, "source" means the combined state.
 
 - Source enters one of the "running" states → start (from `idle`) or resume (from `paused`).
 - Source enters any other valid state (e.g. `off`, `idle`) → pause.
@@ -102,7 +116,7 @@ One event type on the Home Assistant event bus: `stopwatch_plus_event`.
 | `reset` | Set back to zero; a running stopwatch keeps running |
 | `interval` | An interval of running time has been reached |
 
-Event data: `type`, `entity_id`, `device_id`, `name`, `elapsed_seconds`, `elapsed_formatted` (see below), `interval_count`, `source` (`action`, `button`, `source_entity`, `auto_stop`; `null` for `interval` events). For `interval` events, `elapsed_seconds` is the exact threshold (e.g. 3600), not the slightly later firing time. For `stopped` and `reset` events, `elapsed_seconds`, `elapsed_formatted` and `interval_count` are the values the session reached before going back to zero.
+Event data: `type`, `entity_id`, `device_id`, `name`, `elapsed_seconds`, `elapsed_formatted`, `elapsed_formatted_short` (see below), `interval_count`, `source` (`action`, `button`, `source_entity`, `auto_stop`; `null` for `interval` events). For `interval` events, `elapsed_seconds` is the exact threshold (e.g. 3600), not the slightly later firing time. For `stopped` and `reset` events, `elapsed_seconds`, both formatted values and `interval_count` are the values the session reached before going back to zero.
 
 Each `type` is also available as its own device trigger in the automation editor ("Stopwatch started", "Interval reached", …). Interval events fire at the exact moment, independent of the sensor update interval. A state trigger on the status sensor remains possible as a generic alternative.
 
@@ -116,11 +130,13 @@ Restoring the state after a restart fires no events. Intervals that fell into th
 
 `elapsed_formatted` (attribute and event data) uses `HH:MM:SS`, and `d.HH:MM:SS` from 24 hours on – the constant ("c") format of a .NET `TimeSpan`. Examples: `00:02:30`, `12:05:09`, `1.02:03:04`, `10.00:00:05`. Hours, minutes and seconds always have two digits; days have no leading zero and only appear when needed.
 
+`elapsed_formatted_short` is the same without the seconds: `HH:MM`, and `d.HH:MM` from 24 hours on, e.g. `00:02`, `1.02:03`. The seconds are cut off, not rounded, so it changes at the same moment as the full format.
+
 The attribute is updated together with the sensor state (update interval); event data is calculated at the moment of the event and is always exact.
 
 ## Setup (config flow / options)
 
-Name; optional source entity and the states that count as "running"; grace period for unavailable source; auto-stop on/off and delay; interval (0 = off, max. 24 h); sensor update interval (1 s – 1 h). Both are entered with Home Assistant's duration field (hours, minutes, seconds) and stored in seconds. Everything except the name can be changed later via "Configure" (options flow); saving the options reloads the stopwatch. The state is stored per stopwatch in Home Assistant's `.storage` folder and deleted when the stopwatch is removed.
+Name; optional source entities, how they are combined, and the states that count as "running"; grace period for unavailable source; auto-stop on/off and delay; interval (0 = off, max. 24 h); sensor update interval (1 s – 1 h). Both are entered with Home Assistant's duration field (hours, minutes, seconds) and stored in seconds. Everything except the name can be changed later via "Configure" (options flow); saving the options reloads the stopwatch. The state is stored per stopwatch in Home Assistant's `.storage` folder and deleted when the stopwatch is removed.
 
 ## Live display with infrequent sensor updates
 
@@ -163,10 +179,10 @@ CHANGELOG.md
 ## Milestones
 
 1. **Manual stopwatch** – done: state logic with restore, sensors, buttons, actions, events incl. intervals, config and options flow (name, interval, update interval), tests for the minimum and the latest Home Assistant. After the first test: intervals in seconds, integration instead of helper.
-2. **Source entity** – done: binding with running states, grace period with backdated pause, auto-reset for new sessions (changed to auto-stop in 0.3.0), persisted across restarts; settings in a collapsible "Source entity" section of the config and options flow.
+2. **Source entity** – done (several source entities with OR / AND since 1.1.0): binding with running states, grace period with backdated pause, auto-reset for new sessions (changed to auto-stop in 0.3.0), persisted across restarts; settings in a collapsible "Source entity" section of the config and options flow.
 3. **Device triggers** – done: one device trigger per event type (`started`, `paused`, `resumed`, `stopped`, `reset`, `interval`), based on `stopwatch_plus_event` filtered by `device_id` and `type`; translated names in English and German.
 4. **Dashboard card** – done: card with standard and compact layout, visual editor and tile card feature, counting live in the browser; shipped and registered by the integration.
-5. **Release and HACS** – icon and first release v0.1.0 done; card tested with the frontends of 2026.1 and 2026.9; v1.0.0 prepared; submission to the HACS default list open.
+5. **Release and HACS** – icon and first release v0.1.0 done; card tested with the frontends of 2026.1 and 2026.9; v1.0.0 released; included in the HACS default store in October 2026.
 
 ## Quality
 

@@ -50,6 +50,18 @@ def format_duration(seconds: float) -> str:
     return f"{days}.{formatted}" if days else formatted
 
 
+def format_duration_short(seconds: float) -> str:
+    """Format seconds as HH:MM, with days as d.HH:MM from 24 hours on.
+
+    Like format_duration without the seconds, which are cut off (not rounded),
+    e.g. 00:02 for 2 minutes 59 seconds or 1.02:03.
+    """
+    days, rest = divmod(int(seconds), 86400)
+    hours, rest = divmod(rest, 3600)
+    formatted = f"{hours:02d}:{rest // 60:02d}"
+    return f"{days}.{formatted}" if days else formatted
+
+
 def _storage_key(entry_id: str) -> str:
     """Return the storage key of a stopwatch."""
     return f"{DOMAIN}.{entry_id}"
@@ -417,6 +429,7 @@ class Stopwatch:
             "name": self.name,
             "elapsed_seconds": int(elapsed_seconds),
             "elapsed_formatted": format_duration(elapsed_seconds),
+            "elapsed_formatted_short": format_duration_short(elapsed_seconds),
             "interval_count": interval_count,
             "source": source,
         }

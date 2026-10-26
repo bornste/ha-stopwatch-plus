@@ -1,4 +1,4 @@
-"""Binding of a stopwatch to a source entity (e.g. a TV or a window sensor)."""
+"""Binding of a stopwatch to source entities (e.g. a TV or a window sensor)."""
 
 from __future__ import annotations
 
@@ -21,7 +21,12 @@ from homeassistant.helpers.event import (
 )
 from homeassistant.util import dt as dt_util
 
-from .const import SOURCE_AUTO_STOP, SOURCE_SOURCE_ENTITY, STATUS_PAUSED
+from .const import (
+    SOURCE_AUTO_STOP,
+    SOURCE_COMBINE_AND,
+    SOURCE_SOURCE_ENTITY,
+    STATUS_PAUSED,
+)
 from .stopwatch import Stopwatch
 
 _LOGGER = logging.getLogger(__name__)
@@ -32,15 +37,39 @@ KEY_UNAVAILABLE_SINCE = "unavailable_since"
 
 
 class SourceState(Enum):
-    """How a state of the source entity is interpreted."""
+    """How a state of a source entity, or of all of them together, is interpreted."""
 
     RUNNING = "running"
     INACTIVE = "inactive"
     UNAVAILABLE = "unavailable"
 
 
+def combine_states(states: list[SourceState], combine: str) -> SourceState:
+    """Combine the states of several source entities into one.
+
+    OR: running while at least one source is running. AND: running while all
+    sources are running. A source that is unavailable might be running, so it
+    makes the result unavailable where its real state would decide it: with OR
+    when no other source is running, with AND when no other source is inactive.
+    """
+    if combine == SOURCE_COMBINE_AND:
+        # A single inactive source decides, otherwise all must be running
+        decisive, otherwise = SourceState.INACTIVE, SourceState.RUNNING
+    else:
+        # A single running source decides, otherwise all are inactive
+        decisive, otherwise = SourceState.RUNNING, SourceState.INACTIVE
+    if decisive in states:
+        return decisive
+    if SourceState.UNAVAILABLE in states:
+        return SourceState.UNAVAILABLE
+    return otherwise
+
+
 class SourceBinding:
-    """Start, pause and stop a stopwatch following a source entity.
+    """Start, pause and stop a stopwatch following one or more source entities.
+
+    The states of all source entities are combined into one (see
+    combine_states), which drives the stopwatch:
 
     - A "running" state starts or resumes the stopwatch.
     - Any other valid state pauses it.
@@ -56,7 +85,8 @@ class SourceBinding:
         self,
         hass: HomeAssistant,
         stopwatch: Stopwatch,
-        entity_id: str,
+        entity_ids: list[str],
+        combine: str,
         running_states: list[str],
         grace_period_seconds: int,
         auto_stop: bool,
@@ -65,7 +95,10 @@ class SourceBinding:
         """Initialize the binding."""
         self.hass = hass
         self._stopwatch = stopwatch
-        self._entity_id = entity_id
+        self._entity_ids = entity_ids
+        self._combine = combine
+        # Combined state the stopwatch was last brought in line with
+        self._combined: SourceState | None = None
         self._running_states = {state.strip() for state in running_states}
         self._grace_period = timedelta(seconds=grace_period_seconds)
         self._auto_stop = auto_stop
@@ -77,17 +110,17 @@ class SourceBinding:
 
     @callback
     def async_start(self) -> None:
-        """Follow the source entity, beginning with its current state."""
+        """Follow the source entities, beginning with their current states."""
         self._cancel_state_listener = async_track_state_change_event(
-            self.hass, [self._entity_id], self._handle_state_change
+            self.hass, self._entity_ids, self._handle_state_change
         )
         # After a restart, a persisted unavailable_since keeps the original
         # grace period running
-        self._apply(self.hass.states.get(self._entity_id), dt_util.utcnow())
+        self._apply(self._combined_state(), dt_util.utcnow())
 
     @callback
     def async_stop(self) -> None:
-        """Stop following the source entity."""
+        """Stop following the source entities."""
         if self._cancel_state_listener is not None:
             self._cancel_state_listener()
             self._cancel_state_listener = None
@@ -95,31 +128,43 @@ class SourceBinding:
         self._cancel_auto_stop()
 
     def _classify(self, state: State | None) -> SourceState:
-        """Interpret a state of the source entity."""
+        """Interpret a state of a source entity."""
         if state is None or state.state in (STATE_UNAVAILABLE, STATE_UNKNOWN):
             return SourceState.UNAVAILABLE
         if state.state in self._running_states:
             return SourceState.RUNNING
         return SourceState.INACTIVE
 
-    @callback
-    def _handle_state_change(self, event: Event[EventStateChangedData]) -> None:
-        """React when the source changes between running, inactive and unavailable.
+    def _combined_state(self) -> SourceState:
+        """Return the combined state of all source entities."""
+        states = [
+            self._classify(self.hass.states.get(entity_id))
+            for entity_id in self._entity_ids
+        ]
+        return combine_states(states, self._combine)
 
-        Changes that keep the same meaning (e.g. only attributes changed, or
-        playing -> on) are ignored, so a manual pause is not undone by them.
+    @callback
+    def _handle_state_change(self, _event: Event[EventStateChangedData]) -> None:
+        """React when the combined state of the sources changes.
+
+        Changes that keep the same meaning (e.g. only attributes changed,
+        playing -> on, or a second source starting while one is running with
+        OR) are ignored, so a manual pause is not undone by them.
         """
-        old_state, new_state = event.data["old_state"], event.data["new_state"]
-        if self._classify(old_state) is self._classify(new_state):
+        source_state = self._combined_state()
+        if source_state is self._combined:
             return
-        self._apply(new_state, dt_util.utcnow())
+        self._apply(source_state, dt_util.utcnow())
 
     @callback
-    def _apply(self, state: State | None, now: datetime) -> None:
-        """Bring the stopwatch in line with the source state."""
-        source_state = self._classify(state)
+    def _apply(self, source_state: SourceState, now: datetime) -> None:
+        """Bring the stopwatch in line with the combined source state."""
+        self._combined = source_state
         _LOGGER.debug(
-            "%s: source %s is %s", self._stopwatch.name, self._entity_id, source_state
+            "%s: sources %s are %s",
+            self._stopwatch.name,
+            ", ".join(self._entity_ids),
+            source_state,
         )
         if source_state is SourceState.RUNNING:
             self._on_running(now)

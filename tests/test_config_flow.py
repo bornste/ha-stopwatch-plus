@@ -13,7 +13,8 @@ from custom_components.stopwatch_plus.const import (
     CONF_GRACE_PERIOD,
     CONF_INTERVAL,
     CONF_RUNNING_STATES,
-    CONF_SOURCE_ENTITY,
+    CONF_SOURCE_COMBINE,
+    CONF_SOURCE_ENTITIES,
     CONF_UPDATE_INTERVAL,
     DOMAIN,
 )
@@ -22,6 +23,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 
 DEFAULT_SOURCE_OPTIONS = {
+    CONF_SOURCE_COMBINE: "or",
     CONF_RUNNING_STATES: ["playing", "on"],
     CONF_GRACE_PERIOD: 120,
     CONF_AUTO_STOP: False,
@@ -67,7 +69,7 @@ async def test_create_stopwatch(hass: HomeAssistant) -> None:
 
 
 async def test_create_stopwatch_with_source(hass: HomeAssistant) -> None:
-    """The source section is flattened into the options."""
+    """The source section is flattened into the options, without duplicates."""
     result = await _start_user_flow(hass)
     result = await hass.config_entries.flow.async_configure(
         result["flow_id"],
@@ -76,7 +78,12 @@ async def test_create_stopwatch_with_source(hass: HomeAssistant) -> None:
             CONF_INTERVAL: _duration(),
             CONF_UPDATE_INTERVAL: _duration(minutes=1),
             "source": {
-                CONF_SOURCE_ENTITY: "media_player.xbox",
+                CONF_SOURCE_ENTITIES: [
+                    "media_player.xbox",
+                    "binary_sensor.xbox_in_game",
+                    "media_player.xbox",
+                ],
+                CONF_SOURCE_COMBINE: "and",
                 CONF_RUNNING_STATES: ["playing", " gaming "],
                 CONF_GRACE_PERIOD: _duration(minutes=5),
                 CONF_AUTO_STOP: True,
@@ -89,7 +96,8 @@ async def test_create_stopwatch_with_source(hass: HomeAssistant) -> None:
     assert result["options"] == {
         CONF_INTERVAL: 0,
         CONF_UPDATE_INTERVAL: 60,
-        CONF_SOURCE_ENTITY: "media_player.xbox",
+        CONF_SOURCE_ENTITIES: ["media_player.xbox", "binary_sensor.xbox_in_game"],
+        CONF_SOURCE_COMBINE: "and",
         CONF_RUNNING_STATES: ["playing", "gaming"],
         CONF_GRACE_PERIOD: 300,
         CONF_AUTO_STOP: True,
@@ -119,7 +127,7 @@ async def test_invalid_durations_show_errors(hass: HomeAssistant) -> None:
     ("source", "error"),
     [
         (
-            {CONF_SOURCE_ENTITY: "media_player.xbox", CONF_RUNNING_STATES: []},
+            {CONF_SOURCE_ENTITIES: ["media_player.xbox"], CONF_RUNNING_STATES: []},
             "running_states_required",
         ),
         ({CONF_GRACE_PERIOD: _duration(hours=2)}, "grace_period_too_long"),
@@ -171,7 +179,7 @@ async def test_change_options(
         {
             CONF_INTERVAL: 0,
             CONF_UPDATE_INTERVAL: 60,
-            CONF_SOURCE_ENTITY: "media_player.xbox",
+            CONF_SOURCE_ENTITIES: ["media_player.xbox"],
             **DEFAULT_SOURCE_OPTIONS,
         }
     ],
@@ -179,13 +187,13 @@ async def test_change_options(
 async def test_options_keep_or_remove_source(
     hass: HomeAssistant, setup_stopwatch: MockConfigEntry
 ) -> None:
-    """Without the source section the source is kept; a cleared field removes it."""
+    """Without the source section the sources are kept; a cleared field removes them."""
     result = await hass.config_entries.options.async_init(setup_stopwatch.entry_id)
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {CONF_INTERVAL: _duration(minutes=1)}
     )
     await hass.async_block_till_done()
-    assert setup_stopwatch.options[CONF_SOURCE_ENTITY] == "media_player.xbox"
+    assert setup_stopwatch.options[CONF_SOURCE_ENTITIES] == ["media_player.xbox"]
     assert setup_stopwatch.options[CONF_INTERVAL] == 60
 
     result = await hass.config_entries.options.async_init(setup_stopwatch.entry_id)
@@ -193,5 +201,14 @@ async def test_options_keep_or_remove_source(
         result["flow_id"], {"source": {CONF_RUNNING_STATES: ["playing"]}}
     )
     await hass.async_block_till_done()
-    assert CONF_SOURCE_ENTITY not in setup_stopwatch.options
+    assert CONF_SOURCE_ENTITIES not in setup_stopwatch.options
     assert setup_stopwatch.options[CONF_RUNNING_STATES] == ["playing"]
+
+    # An empty list, as sent by a cleared multiple entity selector
+    for entities, expected in ((["switch.pc"], ["switch.pc"]), ([], None)):
+        result = await hass.config_entries.options.async_init(setup_stopwatch.entry_id)
+        result = await hass.config_entries.options.async_configure(
+            result["flow_id"], {"source": {CONF_SOURCE_ENTITIES: entities}}
+        )
+        await hass.async_block_till_done()
+        assert setup_stopwatch.options.get(CONF_SOURCE_ENTITIES) == expected

@@ -17,17 +17,19 @@
         "sections": {
           "source": {
             "name": "Entità sorgente",
-            "description": "Facoltativo: il cronometro segue un'entità, ad es. un televisore o un sensore della finestra. Funziona finché l'entità è in uno degli stati di funzionamento e va in pausa altrimenti.",
+            "description": "Facoltativo: il cronometro segue una o più entità, ad es. un televisore o un sensore della finestra. Funziona finché le entità sono in uno degli stati di funzionamento e va in pausa altrimenti. Con più entità, \"Combinazione\" decide quando contano insieme come in funzione; la tolleranza e l'arresto automatico si basano su questo stato combinato.",
             "data": {
-              "source_entity": "Entità sorgente",
+              "source_entities": "Entità sorgente",
+              "source_combine": "Combinazione",
               "running_states": "Stati di funzionamento",
               "grace_period": "Tolleranza in caso di indisponibilità",
               "auto_stop": "Arresta automaticamente dopo inattività",
               "auto_stop_delay": "Inattività prima dell'arresto"
             },
             "data_description": {
-              "source_entity": "Lascia vuoto per controllare il cronometro solo con pulsanti, azioni e automazioni.",
-              "running_states": "Stati dell'entità sorgente in cui il cronometro funziona, ad es. \"playing\" o \"on\". Puoi inserire valori personalizzati.",
+              "source_entities": "Lascia vuoto per controllare il cronometro solo con pulsanti, azioni e automazioni.",
+              "source_combine": "Come vengono combinati gli stati di più entità sorgente. Conta solo con due o più.",
+              "running_states": "Stati in cui un'entità sorgente conta come in funzione, ad es. \"playing\" o \"on\". Valgono per tutte le entità sorgente. Puoi inserire valori personalizzati.",
               "grace_period": "Se la sorgente resta non disponibile o sconosciuta più a lungo di questo tempo, il cronometro va in pausa con effetto retroattivo dall'inizio dell'interruzione. 0 disattiva la tolleranza: la non disponibilità mette subito in pausa, come qualsiasi altro stato che non sia di funzionamento. Al massimo 1 ora.",
               "auto_stop": "Se la sorgente resta inattiva per il tempo indicato sotto, la sessione termina: il cronometro viene fermato e azzerato. Il tempo della sessione rimane nel sensore \"Ultima sessione\". Il successivo avvio della sorgente inizia una nuova sessione.",
               "auto_stop_delay": "Per quanto tempo la sorgente deve restare inattiva prima che il cronometro si fermi, al massimo 7 giorni. 0: il cronometro si ferma non appena la sorgente diventa inattiva."
@@ -39,7 +41,7 @@
     "error": {
       "interval_too_long": "L'intervallo può essere al massimo di 24 ore.",
       "update_interval_out_of_range": "L'intervallo di aggiornamento deve essere compreso tra 1 secondo e 1 ora.",
-      "running_states_required": "Seleziona almeno uno stato di funzionamento per l'entità sorgente.",
+      "running_states_required": "Seleziona almeno uno stato di funzionamento per le entità sorgente.",
       "grace_period_too_long": "La tolleranza può essere al massimo di 1 ora.",
       "auto_stop_delay_too_long": "L'inattività prima dell'arresto può essere al massimo di 7 giorni."
     }
@@ -59,17 +61,19 @@
         "sections": {
           "source": {
             "name": "Entità sorgente",
-            "description": "Facoltativo: il cronometro segue un'entità, ad es. un televisore o un sensore della finestra. Funziona finché l'entità è in uno degli stati di funzionamento e va in pausa altrimenti.",
+            "description": "Facoltativo: il cronometro segue una o più entità, ad es. un televisore o un sensore della finestra. Funziona finché le entità sono in uno degli stati di funzionamento e va in pausa altrimenti. Con più entità, \"Combinazione\" decide quando contano insieme come in funzione; la tolleranza e l'arresto automatico si basano su questo stato combinato.",
             "data": {
-              "source_entity": "Entità sorgente",
+              "source_entities": "Entità sorgente",
+              "source_combine": "Combinazione",
               "running_states": "Stati di funzionamento",
               "grace_period": "Tolleranza in caso di indisponibilità",
               "auto_stop": "Arresta automaticamente dopo inattività",
               "auto_stop_delay": "Inattività prima dell'arresto"
             },
             "data_description": {
-              "source_entity": "Lascia vuoto per controllare il cronometro solo con pulsanti, azioni e automazioni.",
-              "running_states": "Stati dell'entità sorgente in cui il cronometro funziona, ad es. \"playing\" o \"on\". Puoi inserire valori personalizzati.",
+              "source_entities": "Lascia vuoto per controllare il cronometro solo con pulsanti, azioni e automazioni.",
+              "source_combine": "Come vengono combinati gli stati di più entità sorgente. Conta solo con due o più.",
+              "running_states": "Stati in cui un'entità sorgente conta come in funzione, ad es. \"playing\" o \"on\". Valgono per tutte le entità sorgente. Puoi inserire valori personalizzati.",
               "grace_period": "Se la sorgente resta non disponibile o sconosciuta più a lungo di questo tempo, il cronometro va in pausa con effetto retroattivo dall'inizio dell'interruzione. 0 disattiva la tolleranza: la non disponibilità mette subito in pausa, come qualsiasi altro stato che non sia di funzionamento. Al massimo 1 ora.",
               "auto_stop": "Se la sorgente resta inattiva per il tempo indicato sotto, la sessione termina: il cronometro viene fermato e azzerato. Il tempo della sessione rimane nel sensore \"Ultima sessione\". Il successivo avvio della sorgente inizia una nuova sessione.",
               "auto_stop_delay": "Per quanto tempo la sorgente deve restare inattiva prima che il cronometro si fermi, al massimo 7 giorni. 0: il cronometro si ferma non appena la sorgente diventa inattiva."
@@ -81,9 +85,17 @@
     "error": {
       "interval_too_long": "L'intervallo può essere al massimo di 24 ore.",
       "update_interval_out_of_range": "L'intervallo di aggiornamento deve essere compreso tra 1 secondo e 1 ora.",
-      "running_states_required": "Seleziona almeno uno stato di funzionamento per l'entità sorgente.",
+      "running_states_required": "Seleziona almeno uno stato di funzionamento per le entità sorgente.",
       "grace_period_too_long": "La tolleranza può essere al massimo di 1 ora.",
       "auto_stop_delay_too_long": "L'inattività prima dell'arresto può essere al massimo di 7 giorni."
+    }
+  },
+  "selector": {
+    "source_combine": {
+      "options": {
+        "or": "Almeno una è in funzione (O)",
+        "and": "Tutte sono in funzione (E)"
+      }
     }
   },
   "entity": {
@@ -110,6 +122,9 @@
         "state_attributes": {
           "elapsed_formatted": {
             "name": "Tempo trascorso (formattato)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Tempo trascorso (breve)"
           },
           "status": {
             "name": "Stato",
@@ -147,6 +162,9 @@
           "elapsed_formatted": {
             "name": "Ultima sessione (formattata)"
           },
+          "elapsed_formatted_short": {
+            "name": "Ultima sessione (breve)"
+          },
           "ended_at": {
             "name": "Terminata alle"
           }
@@ -172,6 +190,9 @@
           },
           "elapsed_formatted": {
             "name": "Tempo trascorso (formattato)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Tempo trascorso (breve)"
           },
           "interval_count": {
             "name": "Numero di intervalli"

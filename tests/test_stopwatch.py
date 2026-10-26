@@ -21,7 +21,10 @@ from custom_components.stopwatch_plus.sensor import (
     StopwatchElapsedSensor,
     StopwatchLastSessionSensor,
 )
-from custom_components.stopwatch_plus.stopwatch import format_duration
+from custom_components.stopwatch_plus.stopwatch import (
+    format_duration,
+    format_duration_short,
+)
 from homeassistant.core import Event, HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import entity_registry as er
@@ -103,6 +106,7 @@ async def test_start_pause_resume_reset(
     assert all(event.data["source"] == "button" for event in events)
     assert events[1].data["elapsed_seconds"] == 90
     assert events[1].data["elapsed_formatted"] == "00:01:30"
+    assert events[1].data["elapsed_formatted_short"] == "00:01"
     assert events[1].data["entity_id"] == ELAPSED
     assert events[1].data["name"] == "Gaming"
 
@@ -312,14 +316,36 @@ def test_format_duration(seconds: float, expected: str) -> None:
     assert format_duration(seconds) == expected
 
 
+@pytest.mark.parametrize(
+    ("seconds", "expected"),
+    [
+        (0, "00:00"),
+        (179, "00:02"),
+        (10500, "02:55"),
+        (86399, "23:59"),
+        (86400, "1.00:00"),
+        (96959, "1.02:55"),
+        (864005, "10.00:00"),
+    ],
+)
+def test_format_duration_short(seconds: float, expected: str) -> None:
+    """Like format_duration without the seconds, which are cut off."""
+    assert format_duration_short(seconds) == expected
+
+
 async def test_formatted_attribute_and_precision(
     hass: HomeAssistant, freezer: FrozenDateTimeFactory
 ) -> None:
-    """The sensor has a formatted attribute (not recorded) and no decimals."""
+    """The sensor has formatted attributes (not recorded) and no decimals."""
     await _press(hass, START)
     await _advance(hass, freezer, 60)
-    assert hass.states.get(ELAPSED).attributes["elapsed_formatted"] == "00:01:00"
-    assert "elapsed_formatted" in StopwatchElapsedSensor._unrecorded_attributes
+    attributes = hass.states.get(ELAPSED).attributes
+    assert attributes["elapsed_formatted"] == "00:01:00"
+    assert attributes["elapsed_formatted_short"] == "00:01"
+    assert StopwatchElapsedSensor._unrecorded_attributes == {
+        "elapsed_formatted",
+        "elapsed_formatted_short",
+    }
     options = er.async_get(hass).async_get(ELAPSED).options
     assert options["sensor"]["suggested_display_precision"] == 0
 
@@ -414,8 +440,12 @@ async def test_last_session_sensor(
     assert state.state == "3725"
     assert state.attributes["device_class"] == "duration"
     assert state.attributes["elapsed_formatted"] == "01:02:05"
+    assert state.attributes["elapsed_formatted_short"] == "01:02"
     assert state.attributes["ended_at"] is not None
-    assert "elapsed_formatted" in StopwatchLastSessionSensor._unrecorded_attributes
+    assert StopwatchLastSessionSensor._unrecorded_attributes == {
+        "elapsed_formatted",
+        "elapsed_formatted_short",
+    }
 
     # A new session does not change it until it ends
     await _press(hass, START)

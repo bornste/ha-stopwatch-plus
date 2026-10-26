@@ -11,7 +11,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import KEY_ELAPSED, KEY_LAST_SESSION, KEY_STATUS, STATUSES
 from .entity import StopwatchEntity
-from .stopwatch import format_duration
+from .stopwatch import format_duration, format_duration_short
 
 if TYPE_CHECKING:
     from . import StopwatchConfigEntry
@@ -53,8 +53,8 @@ class StopwatchElapsedSensor(StopwatchSensor):
     _attr_native_unit_of_measurement = UnitOfTime.SECONDS
     # Whole seconds; without this, Home Assistant would show two decimals
     _attr_suggested_display_precision = 0
-    # Derived from the state, so it is not worth storing in the database
-    _unrecorded_attributes = frozenset({"elapsed_formatted"})
+    # Derived from the state, so they are not worth storing in the database
+    _unrecorded_attributes = frozenset({"elapsed_formatted", "elapsed_formatted_short"})
 
     @property
     def native_value(self) -> int:
@@ -67,6 +67,7 @@ class StopwatchElapsedSensor(StopwatchSensor):
         stopwatch = self._stopwatch
         return {
             "elapsed_formatted": format_duration(stopwatch.elapsed_seconds),
+            "elapsed_formatted_short": format_duration_short(stopwatch.elapsed_seconds),
             "status": stopwatch.status,
             "started_at": _isoformat(stopwatch.started_at),
             "running_since": _isoformat(stopwatch.running_since),
@@ -93,7 +94,7 @@ class StopwatchLastSessionSensor(StopwatchSensor):
     _attr_device_class = SensorDeviceClass.DURATION
     _attr_native_unit_of_measurement = UnitOfTime.SECONDS
     _attr_suggested_display_precision = 0
-    _unrecorded_attributes = frozenset({"elapsed_formatted"})
+    _unrecorded_attributes = frozenset({"elapsed_formatted", "elapsed_formatted_short"})
 
     @property
     def native_value(self) -> int | None:
@@ -106,8 +107,14 @@ class StopwatchLastSessionSensor(StopwatchSensor):
         """Return the formatted time and when the session ended."""
         stopwatch = self._stopwatch
         seconds = stopwatch.last_session_seconds
+        if seconds is None:
+            formatted = formatted_short = None
+        else:
+            formatted = format_duration(seconds)
+            formatted_short = format_duration_short(seconds)
         return {
-            "elapsed_formatted": None if seconds is None else format_duration(seconds),
+            "elapsed_formatted": formatted,
+            "elapsed_formatted_short": formatted_short,
             "ended_at": _isoformat(stopwatch.last_session_ended_at),
         }
 

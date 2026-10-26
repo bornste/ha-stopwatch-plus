@@ -16,18 +16,20 @@
         },
         "sections": {
           "source": {
-            "name": "Entidad de origen",
-            "description": "Opcional: el cronómetro sigue a una entidad, p. ej. un televisor o un sensor de ventana. Funciona mientras la entidad está en uno de los estados de funcionamiento y se pausa en caso contrario.",
+            "name": "Entidades de origen",
+            "description": "Opcional: el cronómetro sigue a una o varias entidades, p. ej. un televisor o un sensor de ventana. Funciona mientras las entidades están en uno de los estados de funcionamiento y se pausa en caso contrario. Con varias entidades, «Combinación» decide cuándo cuentan juntas como en funcionamiento; el periodo de gracia y la detención automática se aplican a este estado combinado.",
             "data": {
-              "source_entity": "Entidad de origen",
+              "source_entities": "Entidades de origen",
+              "source_combine": "Combinación",
               "running_states": "Estados de funcionamiento",
               "grace_period": "Periodo de gracia si no está disponible",
               "auto_stop": "Detener automáticamente tras inactividad",
               "auto_stop_delay": "Inactividad antes de detener"
             },
             "data_description": {
-              "source_entity": "Déjalo vacío para controlar el cronómetro solo con botones, acciones y automatizaciones.",
-              "running_states": "Estados de la entidad de origen en los que funciona el cronómetro, p. ej. «playing» u «on». Puedes escribir los tuyos.",
+              "source_entities": "Déjalo vacío para controlar el cronómetro solo con botones, acciones y automatizaciones.",
+              "source_combine": "Cómo se combinan los estados de varias entidades de origen. Solo influye a partir de dos.",
+              "running_states": "Estados en los que una entidad de origen cuenta como en funcionamiento, p. ej. «playing» u «on». Se aplican a todas las entidades de origen. Puedes escribir los tuyos.",
               "grace_period": "Si la fuente no está disponible o es desconocida durante más tiempo, el cronómetro se pausa con efecto retroactivo desde el inicio de la interrupción. 0 desactiva el periodo de gracia: «no disponible» pausa entonces de inmediato, como cualquier otro estado que no sea de funcionamiento. Como máximo 1 hora.",
               "auto_stop": "Si la fuente permanece inactiva durante el tiempo indicado abajo, la sesión termina: el cronómetro se detiene y se pone a cero. El tiempo de la sesión se conserva en el sensor «Última sesión». El siguiente inicio de la fuente comienza una nueva sesión.",
               "auto_stop_delay": "Cuánto tiempo debe estar inactiva la fuente antes de que se detenga el cronómetro, como máximo 7 días. 0: el cronómetro se detiene en cuanto la fuente pasa a estar inactiva."
@@ -39,7 +41,7 @@
     "error": {
       "interval_too_long": "El intervalo puede ser como máximo de 24 horas.",
       "update_interval_out_of_range": "El intervalo de actualización debe estar entre 1 segundo y 1 hora.",
-      "running_states_required": "Selecciona al menos un estado de funcionamiento para la entidad de origen.",
+      "running_states_required": "Selecciona al menos un estado de funcionamiento para las entidades de origen.",
       "grace_period_too_long": "El periodo de gracia puede ser como máximo de 1 hora.",
       "auto_stop_delay_too_long": "La inactividad antes de detener puede ser como máximo de 7 días."
     }
@@ -58,18 +60,20 @@
         },
         "sections": {
           "source": {
-            "name": "Entidad de origen",
-            "description": "Opcional: el cronómetro sigue a una entidad, p. ej. un televisor o un sensor de ventana. Funciona mientras la entidad está en uno de los estados de funcionamiento y se pausa en caso contrario.",
+            "name": "Entidades de origen",
+            "description": "Opcional: el cronómetro sigue a una o varias entidades, p. ej. un televisor o un sensor de ventana. Funciona mientras las entidades están en uno de los estados de funcionamiento y se pausa en caso contrario. Con varias entidades, «Combinación» decide cuándo cuentan juntas como en funcionamiento; el periodo de gracia y la detención automática se aplican a este estado combinado.",
             "data": {
-              "source_entity": "Entidad de origen",
+              "source_entities": "Entidades de origen",
+              "source_combine": "Combinación",
               "running_states": "Estados de funcionamiento",
               "grace_period": "Periodo de gracia si no está disponible",
               "auto_stop": "Detener automáticamente tras inactividad",
               "auto_stop_delay": "Inactividad antes de detener"
             },
             "data_description": {
-              "source_entity": "Déjalo vacío para controlar el cronómetro solo con botones, acciones y automatizaciones.",
-              "running_states": "Estados de la entidad de origen en los que funciona el cronómetro, p. ej. «playing» u «on». Puedes escribir los tuyos.",
+              "source_entities": "Déjalo vacío para controlar el cronómetro solo con botones, acciones y automatizaciones.",
+              "source_combine": "Cómo se combinan los estados de varias entidades de origen. Solo influye a partir de dos.",
+              "running_states": "Estados en los que una entidad de origen cuenta como en funcionamiento, p. ej. «playing» u «on». Se aplican a todas las entidades de origen. Puedes escribir los tuyos.",
               "grace_period": "Si la fuente no está disponible o es desconocida durante más tiempo, el cronómetro se pausa con efecto retroactivo desde el inicio de la interrupción. 0 desactiva el periodo de gracia: «no disponible» pausa entonces de inmediato, como cualquier otro estado que no sea de funcionamiento. Como máximo 1 hora.",
               "auto_stop": "Si la fuente permanece inactiva durante el tiempo indicado abajo, la sesión termina: el cronómetro se detiene y se pone a cero. El tiempo de la sesión se conserva en el sensor «Última sesión». El siguiente inicio de la fuente comienza una nueva sesión.",
               "auto_stop_delay": "Cuánto tiempo debe estar inactiva la fuente antes de que se detenga el cronómetro, como máximo 7 días. 0: el cronómetro se detiene en cuanto la fuente pasa a estar inactiva."
@@ -81,9 +85,17 @@
     "error": {
       "interval_too_long": "El intervalo puede ser como máximo de 24 horas.",
       "update_interval_out_of_range": "El intervalo de actualización debe estar entre 1 segundo y 1 hora.",
-      "running_states_required": "Selecciona al menos un estado de funcionamiento para la entidad de origen.",
+      "running_states_required": "Selecciona al menos un estado de funcionamiento para las entidades de origen.",
       "grace_period_too_long": "El periodo de gracia puede ser como máximo de 1 hora.",
       "auto_stop_delay_too_long": "La inactividad antes de detener puede ser como máximo de 7 días."
+    }
+  },
+  "selector": {
+    "source_combine": {
+      "options": {
+        "or": "Al menos una funciona (O)",
+        "and": "Todas funcionan (Y)"
+      }
     }
   },
   "entity": {
@@ -110,6 +122,9 @@
         "state_attributes": {
           "elapsed_formatted": {
             "name": "Tiempo transcurrido (con formato)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Tiempo transcurrido (corto)"
           },
           "status": {
             "name": "Estado",
@@ -147,6 +162,9 @@
           "elapsed_formatted": {
             "name": "Última sesión (con formato)"
           },
+          "elapsed_formatted_short": {
+            "name": "Última sesión (corta)"
+          },
           "ended_at": {
             "name": "Finalizada a las"
           }
@@ -172,6 +190,9 @@
           },
           "elapsed_formatted": {
             "name": "Tiempo transcurrido (con formato)"
+          },
+          "elapsed_formatted_short": {
+            "name": "Tiempo transcurrido (corto)"
           },
           "interval_count": {
             "name": "Número de intervalos"
